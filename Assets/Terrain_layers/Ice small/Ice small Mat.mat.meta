@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 93947641d8714c345846d989a540f0ff
+labels:
+- Ice
+- Nature
+- Pattern
+- Terrain
+- Water
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 13237
+  packageName: Nature textures pack
+  packageVersion: 1.0
+  assetPath: Assets/Nature textures pack/Ice small/Ice small Mat.mat
+  uploadId: 118
