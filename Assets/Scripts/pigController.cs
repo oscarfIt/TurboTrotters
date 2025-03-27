@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerInput))]
 public class pigController : MonoBehaviour
 {
 
-    public PigInputActions pigControls;
+    public PlayerInput pigControls;
     public TurboPoints turboPoints;
 
     [Header("Movement Settings")]
@@ -28,12 +29,10 @@ public class pigController : MonoBehaviour
     private bool isGrounded;
     private Vector3 previousPosition;
     private Vector3 originalScale;
-
-    private InputAction move;
-    private InputAction jump;
-    private InputAction turboBoost;
     private double turboEndTime;
-    private bool isBoosted = false;
+    private bool jumped = false;
+    private bool boosted = false;   // This is triggered by input
+    private bool boosting = false;   // This is for knowing to reset the speed
 
     [Header("Friction Settings")]
     public float normalDrag = 1f;
@@ -53,56 +52,36 @@ public class pigController : MonoBehaviour
     private Vector2 inputDirection = Vector2.zero;
     Vector3 moveDirection = Vector3.zero;
 
-    private void Awake()
-    {
-        pigControls = new PigInputActions();
-        // pigControls.Enable();
-    }
-
-    private void OnEnable()
-    {
-        move = pigControls.Pig.Movement;
-        move.Enable();
-
-        jump = pigControls.Pig.Jump;
-        jump.Enable();
-        jump.performed += Jump;
-
-        turboBoost = pigControls.Pig.TurboBoost;
-        turboBoost.Enable();
-        turboBoost.performed += TurboBoost;
-    }
-
-    private void OnDisable()
-    {
-        move.Disable();
-        jump.Disable();
-    }
-
-    // // Friction values
-    // [Header("Friction Materials")]
-    // public PhysicsMaterial normalMaterial;
-    // public PhysicsMaterial iceMaterial;
-    // public PhysicsMaterial mudMaterial;
-
-
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        pigControls = GetComponent<PlayerInput>();
         originalScale = transform.localScale;
         previousPosition = transform.position;
         rb.mass = Constants.MIN_MASS;
         turboPoints = new TurboPoints();
-        playerCollider = GetComponent<Collider>();
     }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        inputDirection = context.ReadValue<Vector2>();
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        jumped = context.action.triggered;
+    }
+
+
+    public void OnTurboBoost(InputAction.CallbackContext context)
+    {
+        boosted = context.action.triggered;
+    }
+
 
     void Update()
     {
-        // Get input
-        inputDirection = move.ReadValue<Vector2>();
-
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -112,6 +91,18 @@ public class pigController : MonoBehaviour
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
         animator.SetFloat("Speed", speed);
         animator.SetBool("IsGrounded", isGrounded);
+        if (boosted && isGrounded && turboPoints.usePoint())
+        {
+            boosting = true;
+            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
+            moveSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
+            Debug.Log("Turbo activated!");
+        }
+        if (jumped && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Debug.Log("Jumped!");
+        }
     }
 
     void FixedUpdate()
@@ -137,29 +128,30 @@ public class pigController : MonoBehaviour
         }
         else
         {
+            // No movement input, so set X/Z velocity to 0 while preserving Y velocity (gravity) and stop rotation
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+            rb.angularVelocity = Vector3.zero;
+        }
+        float distanceTravelled = Vector3.Distance(previousPosition, transform.position);
+        previousPosition = transform.position;
+        CardioEffect(distanceTravelled);
+
+        if (boosting && Time.timeAsDouble >= turboEndTime)
+        {
+            boosting = false;
+            moveSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
+            Debug.Log("Turbo ended!");
+        }
+    }
+
+    // FIXME: Scale and mass changes at different rates
+    private void CardioEffect(float distanceTravelled)
+    {
+        float newMass = rb.mass - (Constants.DISTANCE_MASS_DECREASE * distanceTravelled);
+        Vector3 newScale = transform.localScale - new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
+        if (newMass > Constants.MIN_MASS)
             // No movement input � stop horizontal, preserve vertical (gravity)
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
-        }
-    }
-
-    private void Jump(InputAction.CallbackContext context)
-    {
-        if (isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
-        Debug.Log("jumping for joy");
-    }
-
-    private void TurboBoost(InputAction.CallbackContext context)
-    {
-        if (isGrounded && turboPoints.usePoint())
-        {
-            isBoosted = true;
-            animator.SetTrigger("TurboBoost");
-            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
-            updatedSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
-            Debug.Log("Turbo activated!");
         }
     }
 
@@ -168,6 +160,7 @@ public class pigController : MonoBehaviour
         int terrainIndex = GetTerrainTextureIndex();
 
         if (terrainIndex == groundSoilIndex)
+
         {
             rb.linearDamping = normalDrag;
             updatedSpeed = moveSpeed;
@@ -216,8 +209,8 @@ public class pigController : MonoBehaviour
                 maxIndex = i;
                 maxValue = alphas[0, 0, i];
             }
+            animator.SetTrigger("Eat");
         }
-
         return maxIndex;
     }
 
