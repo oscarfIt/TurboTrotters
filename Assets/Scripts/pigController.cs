@@ -7,6 +7,7 @@ public class pigController : MonoBehaviour
 
     public PigInputActions pigControls;
     public TurboPoints turboPoints;
+
     [Header("Movement Settings")]
 
     // Constants
@@ -34,41 +35,6 @@ public class pigController : MonoBehaviour
     private double turboEndTime;
     private bool isBoosted = false;
 
-    // TODO: Probably a better way to deal with these two
-    private Vector2 inputDirection = Vector2.zero;
-    Vector3 moveDirection = Vector3.zero;
-
-    private void Awake()
-    {
-        pigControls = new PigInputActions();
-    }
-
-    // private void OnEnable()
-    // {
-    //     move = pigControls.Pig.Movement;
-    //     move.Enable();
-
-    //     jump = pigControls.Pig.Jump;
-    //     jump.Enable();
-    //     jump.performed += Jump;
-
-    //     turboBoost = pigControls.Pig.TurboBoost;
-    //     turboBoost.Enable();
-    //     turboBoost.performed += TurboBoost;
-    // }
-
-    private void OnDisable()
-    {
-        move.Disable();
-        jump.Disable();
-    }
-
-    // // Friction values
-    // [Header("Friction Materials")]
-    // public PhysicsMaterial normalMaterial;
-    // public PhysicsMaterial iceMaterial;
-    // public PhysicsMaterial mudMaterial;
-
     [Header("Friction Settings")]
     public float normalDrag = 1f;
     public float iceDrag = 0.2f;
@@ -82,6 +48,44 @@ public class pigController : MonoBehaviour
 
     private float inputHorizontal;
     private float inputVertical;
+
+    // TODO: Probably a better way to deal with these two
+    private Vector2 inputDirection = Vector2.zero;
+    Vector3 moveDirection = Vector3.zero;
+
+    private void Awake()
+    {
+        pigControls = new PigInputActions();
+        // pigControls.Enable();
+    }
+
+    private void OnEnable()
+    {
+        move = pigControls.Pig.Movement;
+        move.Enable();
+
+        jump = pigControls.Pig.Jump;
+        jump.Enable();
+        jump.performed += Jump;
+
+        turboBoost = pigControls.Pig.TurboBoost;
+        turboBoost.Enable();
+        turboBoost.performed += TurboBoost;
+    }
+
+    private void OnDisable()
+    {
+        move.Disable();
+        jump.Disable();
+    }
+
+    // // Friction values
+    // [Header("Friction Materials")]
+    // public PhysicsMaterial normalMaterial;
+    // public PhysicsMaterial iceMaterial;
+    // public PhysicsMaterial mudMaterial;
+
+
 
     void Start()
     {
@@ -101,12 +105,8 @@ public class pigController : MonoBehaviour
 
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
         UpdateFriction(); // Adding Friction based on ground layer
-        // Jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
 
         // Update Animator
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
@@ -132,13 +132,34 @@ public class pigController : MonoBehaviour
 
             // Preserve Y velocity (gravity) while setting X/Z
             Vector3 currentVelocity = rb.linearVelocity;
-            Vector3 targetVelocity = moveDirection * moveSpeed;
+            Vector3 targetVelocity = moveDirection * updatedSpeed;
             rb.linearVelocity = new Vector3(targetVelocity.x, currentVelocity.y, targetVelocity.z);
         }
         else
         {
             // No movement input � stop horizontal, preserve vertical (gravity)
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+        }
+    }
+
+    private void Jump(InputAction.CallbackContext context)
+    {
+        if (isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+        Debug.Log("jumping for joy");
+    }
+
+    private void TurboBoost(InputAction.CallbackContext context)
+    {
+        if (isGrounded && turboPoints.usePoint())
+        {
+            isBoosted = true;
+            animator.SetTrigger("TurboBoost");
+            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
+            updatedSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
+            Debug.Log("Turbo activated!");
         }
     }
 
