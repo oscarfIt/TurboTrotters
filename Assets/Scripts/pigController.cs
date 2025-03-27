@@ -88,8 +88,9 @@ public class pigController : MonoBehaviour
         }
         else
         {
-            // No movement input � stop horizontal, preserve vertical (gravity)
-            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            // No movement input, so set X/Z velocity to 0 while preserving Y velocity (gravity) and stop rotation
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+            rb.angularVelocity = Vector3.zero;
         }
     }
 
