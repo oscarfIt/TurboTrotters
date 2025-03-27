@@ -1,7 +1,7 @@
 public class TurboPoints
 {
-    const int maxPoints = 3;
-    const int minPoints = 0;
+    private const int maxPoints = 3;
+    private const int minPoints = 0;
     private int points = 2;
 
     public void add()
