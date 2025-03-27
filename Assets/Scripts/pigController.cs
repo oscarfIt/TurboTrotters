@@ -11,9 +11,9 @@ public class pigController : MonoBehaviour
     // Constants
     public float moveSpeed = 5f;
     public float turnSpeed = 200f;
-    public float jumpForce; // = 800f;
-    public float groundDistance; // = 0.3f;
-    public float downwardsForce; // = 800f;
+    public float jumpForce = 600f;
+    public float groundDistance = 0.3f;
+    public float downwardsForce = 200f;
 
     [Header("Jump Settings")]
     public Transform groundCheck;
