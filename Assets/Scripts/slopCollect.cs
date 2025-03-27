@@ -4,9 +4,6 @@ public class slopCollect : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public float rotationSpeed = 55f;
-    public float scaleIncrease = 0.2f;
-    private const int massIncrease = 2;
-
 
     void Start()
     {
@@ -21,16 +18,8 @@ public class slopCollect : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) {
-            other.transform.localScale += new Vector3(scaleIncrease, scaleIncrease, scaleIncrease);
-            if (other.attachedRigidbody.mass < Constants.MAX_MASS)
-            {
-                other.attachedRigidbody.mass += massIncrease;
-            }
-
-            Animator animator = other.GetComponent<Animator>();
-            animator.SetTrigger("Eat");
-
+        if (other.CompareTag("Player")) 
+        {
             Destroy(gameObject);
         }
     }

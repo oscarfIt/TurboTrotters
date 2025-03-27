@@ -152,5 +152,20 @@ public class pigController : MonoBehaviour
         {
             turboPoints.add();
         }
+        else if (other.CompareTag("Slop"))
+        {
+            transform.localScale += new Vector3(Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE);
+            float newMass = rb.mass + Constants.SLOP_MASS_INCREASE;
+            if (newMass < Constants.MAX_MASS)
+            {
+                rb.mass += Constants.SLOP_MASS_INCREASE;
+            }
+            else if (rb.mass < Constants.MAX_MASS)
+            {
+                rb.mass = Constants.MAX_MASS;
+            }
+            animator.SetTrigger("Eat");
+            Debug.Log("Mass: " + rb.mass.ToString());
+        }
     }
 }

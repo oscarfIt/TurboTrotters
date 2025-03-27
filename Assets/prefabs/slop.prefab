@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 665075269430821126}
   m_Layer: 0
   m_Name: slop
-  m_TagString: Untagged
+  m_TagString: Slop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -307,7 +307,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 55
-  scaleIncrease: 0.2
 --- !u!135 &665075269430821126
 SphereCollider:
   m_ObjectHideFlags: 0
