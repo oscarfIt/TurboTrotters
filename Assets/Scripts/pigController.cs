@@ -7,13 +7,16 @@ public class pigController : MonoBehaviour
 
     public PigInputActions pigControls;
     [Header("Movement Settings")]
+
+    // Constants
     public float moveSpeed = 5f;
     public float turnSpeed = 200f;
+    public float jumpForce; // = 800f;
+    public float groundDistance; // = 0.3f;
+    public float downwardsForce; // = 800f;
 
     [Header("Jump Settings")]
-    public float jumpForce = 6f;
     public Transform groundCheck;
-    public float groundDistance = 0.3f;
     public LayerMask groundMask;
 
     private Rigidbody rb;
@@ -69,10 +72,11 @@ public class pigController : MonoBehaviour
     {
         Vector3 moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
 
-        // Apply extra downward force if in the air
-        if (!isGrounded)
+        // Apply extra downward force if in the air (if it's not moving upwards)
+        if (!isGrounded && rb.linearVelocity.y <= 0)
         {
-            rb.AddForce(Vector3.down * 40f, ForceMode.Acceleration);
+            Debug.Log("Applying downwards force to pig!");
+            rb.AddForce(Vector3.down * downwardsForce, ForceMode.Acceleration);
         }
 
         if (moveDirection.magnitude >= 0.1f)
