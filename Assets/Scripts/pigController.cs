@@ -22,10 +22,14 @@ public class pigController : MonoBehaviour
     private float inputHorizontal;
     private float inputVertical;
 
+    public AudioClip jumpSound;
+    private AudioSource audioSource;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -41,6 +45,7 @@ public class pigController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
         }
 
         // Update Animator
@@ -52,12 +57,6 @@ public class pigController : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 moveDirection = new Vector3(inputHorizontal, 0, inputVertical).normalized;
-
-        // Apply extra downward force if in the air
-        if (!isGrounded)
-        {
-            rb.AddForce(Vector3.down * 40f, ForceMode.Acceleration);
-        }
 
         if (moveDirection.magnitude >= 0.1f)
         {

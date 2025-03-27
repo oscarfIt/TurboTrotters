@@ -6,10 +6,14 @@ public class slopCollect : MonoBehaviour
     public float rotationSpeed = 55f;
     public float scaleIncrease = 0.2f;
 
+    private AudioSource audioSource;
+    private SphereCollider slopCollider;
 
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+        slopCollider= GetComponent<SphereCollider>();
+     
     }
 
     // Update is called once per frame
@@ -25,8 +29,15 @@ public class slopCollect : MonoBehaviour
 
             Animator animator = other.GetComponent<Animator>();
             animator.SetTrigger("Eat");
+            audioSource.Play();
+            slopCollider.enabled = false;
+     
 
-            Destroy(gameObject);
+            foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+            {
+                renderer.enabled = false;
+            }
+            Destroy(gameObject, audioSource.clip.length);
         }
     }
 }
