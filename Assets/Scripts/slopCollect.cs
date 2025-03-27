@@ -23,7 +23,7 @@ public class slopCollect : MonoBehaviour
     {
         if (other.CompareTag("Player")) {
             other.transform.localScale += new Vector3(scaleIncrease, scaleIncrease, scaleIncrease);
-            if (other.attachedRigidbody.mass < 20)      // TODO: Put this magic 20 in a constants file somewhere
+            if (other.attachedRigidbody.mass < Constants.MAX_MASS)
             {
                 other.attachedRigidbody.mass += massIncrease;
             }

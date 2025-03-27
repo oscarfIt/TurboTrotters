@@ -52,6 +52,7 @@ public class pigController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        rb.mass = Constants.MIN_MASS;
     }
 
     void Update()
