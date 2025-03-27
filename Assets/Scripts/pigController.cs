@@ -116,7 +116,7 @@ public class pigController : MonoBehaviour
         else if (terrainIndex == mudIndex)
         {
             rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            moveSpeed = baseSpeed * 0.3f; // Reduce speed
+            moveSpeed = baseSpeed * 0.8f; // Reduce speed
         }
         else
         {
