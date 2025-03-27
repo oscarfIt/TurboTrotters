@@ -36,6 +36,7 @@ public class pigController : MonoBehaviour
 
         jump = pigControls.Pig.Jump;
         jump.Enable();
+        jump.performed += Jump;
     }
 
     private void OnDisable()
@@ -57,12 +58,6 @@ public class pigController : MonoBehaviour
 
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        // Jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
 
         // Update Animator
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
@@ -95,6 +90,15 @@ public class pigController : MonoBehaviour
         {
             // No movement input � stop horizontal, preserve vertical (gravity)
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+        }
+    }
+
+    private void Jump(InputAction.CallbackContext context)
+    {
+        if (isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Debug.Log("Jumping!");
         }
     }
 }
