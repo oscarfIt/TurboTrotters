@@ -145,13 +145,49 @@ public class pigController : MonoBehaviour
     }
 
     // FIXME: Scale and mass changes at different rates
+    // FIXME: Scale and mass changes at different rates
     private void CardioEffect(float distanceTravelled)
     {
         float newMass = rb.mass - (Constants.DISTANCE_MASS_DECREASE * distanceTravelled);
         Vector3 newScale = transform.localScale - new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
         if (newMass > Constants.MIN_MASS)
-            // No movement input � stop horizontal, preserve vertical (gravity)
-            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+        {
+            rb.mass = newMass;
+        }
+        else if (rb.mass > Constants.MIN_MASS)
+        {
+            transform.localScale = originalScale;
+            rb.mass = Constants.MIN_MASS;
+        }
+        if (newScale.magnitude > originalScale.magnitude)
+        {
+            transform.localScale -= new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
+        }
+        else if (transform.localScale.magnitude > originalScale.magnitude)
+        {
+            transform.localScale = originalScale;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("TurboPickup"))
+        {
+            turboPoints.add();
+        }
+        else if (other.CompareTag("Slop"))
+        {
+            transform.localScale += new Vector3(Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE);
+            float newMass = rb.mass + Constants.SLOP_MASS_INCREASE;
+            if (newMass < Constants.MAX_MASS)
+            {
+                rb.mass += Constants.SLOP_MASS_INCREASE;
+            }
+            else if (rb.mass < Constants.MAX_MASS)
+            {
+                rb.mass = Constants.MAX_MASS;
+            }
+            animator.SetTrigger("Eat");
         }
     }
 
@@ -160,7 +196,6 @@ public class pigController : MonoBehaviour
         int terrainIndex = GetTerrainTextureIndex();
 
         if (terrainIndex == groundSoilIndex)
-
         {
             rb.linearDamping = normalDrag;
             updatedSpeed = moveSpeed;
@@ -209,8 +244,8 @@ public class pigController : MonoBehaviour
                 maxIndex = i;
                 maxValue = alphas[0, 0, i];
             }
-            animator.SetTrigger("Eat");
         }
+
         return maxIndex;
     }
 
