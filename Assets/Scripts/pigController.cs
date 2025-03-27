@@ -62,6 +62,7 @@ public class pigController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         rb.mass = Constants.MIN_MASS;
+        turboPoints = new TurboPoints();
     }
 
     void Update()
@@ -123,6 +124,14 @@ public class pigController : MonoBehaviour
         if (isGrounded && turboPoints.usePoint())
         {
             rb.AddForce(moveDirection * moveSpeed * Constants.TURBO_BOOST_MULTIPLIER, ForceMode.Impulse);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("TurboPickup"))
+        {
+            turboPoints.add();
         }
     }
 }
