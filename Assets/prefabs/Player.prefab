@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 57915920528739046}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.021, z: 0}
+  m_LocalPosition: {x: 0, y: -0.095, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -40,12 +40,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 219.41995
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 33.197
+      value: 31.14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
       propertyPath: m_LocalPosition.z
@@ -81,6 +93,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
@@ -178,7 +194,7 @@ MonoBehaviour:
   groundDistance: 0.3
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!4 &893768586879474556 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8fab799596c52ed48990db3160fa4c24, type: 3}
