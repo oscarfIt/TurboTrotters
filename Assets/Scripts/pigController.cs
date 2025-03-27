@@ -24,7 +24,7 @@ public class pigController : MonoBehaviour
     private Animator animator;
     private bool isGrounded;
     private Vector3 previousPosition;
-    private float totalDistanceTravelled = 0f;
+    private Vector3 originalScale;
 
     private InputAction move;
     private InputAction jump;
@@ -63,6 +63,7 @@ public class pigController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        originalScale = transform.localScale;
         previousPosition = transform.position;
         rb.mass = Constants.MIN_MASS;
         turboPoints = new TurboPoints();
@@ -110,9 +111,8 @@ public class pigController : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
         float distanceTravelled = Vector3.Distance(previousPosition, transform.position);
-        totalDistanceTravelled += distanceTravelled;
         previousPosition = transform.position;
-        DecreaseMass();
+        CardioEffect(distanceTravelled);
     }
 
     private void Jump(InputAction.CallbackContext context)
@@ -132,16 +132,28 @@ public class pigController : MonoBehaviour
         }
     }
 
-    private void DecreaseMass()
+    // FIXME: Scale and mass changes at different rates
+    private void CardioEffect(float distanceTravelled)
     {
-        float newMass = rb.mass - (Constants.MASS_DECREASE_MULTIPLIER * totalDistanceTravelled);
+        Debug.Log("Cardio effect triggered!");
+        float newMass = rb.mass - (Constants.DISTANCE_MASS_DECREASE * distanceTravelled);
+        Vector3 newScale = transform.localScale - new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
         if (newMass > Constants.MIN_MASS)
         {
             rb.mass = newMass;
         }
         else if (rb.mass > Constants.MIN_MASS)
         {
+            transform.localScale = originalScale;
             rb.mass = Constants.MIN_MASS;
+        }
+        if (newScale.magnitude > originalScale.magnitude)
+        {
+            transform.localScale -= new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
+        }
+        else if (transform.localScale.magnitude > originalScale.magnitude)
+        {
+            transform.localScale = originalScale;
         }
         Debug.Log("Mass: " + rb.mass.ToString());
     }
