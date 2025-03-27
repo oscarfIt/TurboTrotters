@@ -20,4 +20,17 @@ public class TurboPoints
         }
     }
 
+    public bool usePoint()
+    {
+        if (points > minPoints)
+        {
+            points--;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }
