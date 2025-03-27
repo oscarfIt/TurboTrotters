@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DestroyOnHit : MonoBehaviour 
+public class DestroyOnHit : MonoBehaviour
 {
 
 	public GameObject explodedPrefab;
@@ -13,22 +13,22 @@ public class DestroyOnHit : MonoBehaviour
 
 	public bool autoDestroy = true;
 	public float lifeTime = 5.0f;
-	
+
 	// Update is called once per frame
 	void OnCollisionEnter(Collision col)
 	{
-		if (!col.rigidbody) 
+		if (!col.rigidbody || col.rigidbody.mass < GetComponent<Rigidbody>().mass)
 			return;
 
 		// instantiate the exploding barrel
-		GameObject go = (GameObject) Instantiate(
-			explodedPrefab, 
-			gameObject.transform.position, 
+		GameObject go = (GameObject)Instantiate(
+			explodedPrefab,
+			gameObject.transform.position,
 			gameObject.transform.rotation
 		);
 
 		// get the explosion component on the new object
-		ExplodeBarrel explodeComp = go.GetComponent<ExplodeBarrel> ();
+		ExplodeBarrel explodeComp = go.GetComponent<ExplodeBarrel>();
 
 		// set desired properties
 		explodeComp.explosionForce = explosionForce;
@@ -42,6 +42,6 @@ public class DestroyOnHit : MonoBehaviour
 		explodeComp.Explode();
 
 		// destroy the nice barrel
-		Destroy (gameObject);
+		Destroy(gameObject);
 	}
 }

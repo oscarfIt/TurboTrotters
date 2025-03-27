@@ -7,6 +7,7 @@ public class HUDManager : MonoBehaviour
 {
     public static HUDManager Instance { get; private set; }
     public List<string> playerNames = new List<string> { "Red", "Blue", "Green", "Yellow" };
+    // public List<string> playerPositions = new List<string> { "Red", "Blue", "Green", "Yellow" };
 
     // [SerializeField] private TextMeshProUGUI[] playerPositionTexts;
     [SerializeField] private TextMeshProUGUI[] playerNameTexts;

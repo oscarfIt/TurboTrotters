@@ -8,10 +8,12 @@ public class pigController : MonoBehaviour
 
     public PlayerInput pigControls;
     public TurboPoints turboPoints;
+
     [Header("Movement Settings")]
 
     // Constants
     public float moveSpeed = 5f;
+    private float updatedSpeed;
     public float turnSpeed = 200f;
     public float jumpForce = 600f;
     public float groundDistance = 0.3f;
@@ -23,6 +25,7 @@ public class pigController : MonoBehaviour
 
     private Rigidbody rb;
     private Animator animator;
+    private Collider playerCollider;
     private bool isGrounded;
     private Vector3 previousPosition;
     private Vector3 originalScale;
@@ -30,6 +33,20 @@ public class pigController : MonoBehaviour
     private bool jumped = false;
     private bool boosted = false;   // This is triggered by input
     private bool boosting = false;   // This is for knowing to reset the speed
+
+    [Header("Friction Settings")]
+    public float normalDrag = 1f;
+    public float iceDrag = 0.2f;
+    public float mudDrag = 5f;
+
+    // relates to the ground layer levels
+    [Header("Terrain Layer Mapping")]
+    public int groundSoilIndex = 1; // Adjust based on your terrain layer order
+    public int iceIndex = 2;
+    public int mudIndex = 4;
+
+    private float inputHorizontal;
+    private float inputVertical;
 
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
@@ -56,6 +73,7 @@ public class pigController : MonoBehaviour
         jumped = context.action.triggered;
     }
 
+
     public void OnTurboBoost(InputAction.CallbackContext context)
     {
         boosted = context.action.triggered;
@@ -66,6 +84,8 @@ public class pigController : MonoBehaviour
     {
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        UpdateFriction(); // Adding Friction based on ground layer
 
         // Update Animator
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
@@ -103,7 +123,7 @@ public class pigController : MonoBehaviour
 
             // Preserve Y velocity (gravity) while setting X/Z
             Vector3 currentVelocity = rb.linearVelocity;
-            Vector3 targetVelocity = moveDirection * moveSpeed;
+            Vector3 targetVelocity = moveDirection * updatedSpeed;
             rb.linearVelocity = new Vector3(targetVelocity.x, currentVelocity.y, targetVelocity.z);
         }
         else
@@ -130,43 +150,68 @@ public class pigController : MonoBehaviour
         float newMass = rb.mass - (Constants.DISTANCE_MASS_DECREASE * distanceTravelled);
         Vector3 newScale = transform.localScale - new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
         if (newMass > Constants.MIN_MASS)
-        {
-            rb.mass = newMass;
-        }
-        else if (rb.mass > Constants.MIN_MASS)
-        {
-            transform.localScale = originalScale;
-            rb.mass = Constants.MIN_MASS;
-        }
-        if (newScale.magnitude > originalScale.magnitude)
-        {
-            transform.localScale -= new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
-        }
-        else if (transform.localScale.magnitude > originalScale.magnitude)
-        {
-            transform.localScale = originalScale;
+            // No movement input � stop horizontal, preserve vertical (gravity)
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void UpdateFriction()
     {
-        if (other.CompareTag("TurboPickup"))
+        int terrainIndex = GetTerrainTextureIndex();
+
+        if (terrainIndex == groundSoilIndex)
+
         {
-            turboPoints.add();
+            rb.linearDamping = normalDrag;
+            updatedSpeed = moveSpeed;
         }
-        else if (other.CompareTag("Slop"))
+        else if (terrainIndex == iceIndex)
         {
-            transform.localScale += new Vector3(Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE);
-            float newMass = rb.mass + Constants.SLOP_MASS_INCREASE;
-            if (newMass < Constants.MAX_MASS)
+            rb.linearDamping = iceDrag;  // Reduce drag = more slippery
+            updatedSpeed = moveSpeed * 1.2f; // Slight speed boost
+        }
+        else if (terrainIndex == mudIndex)
+        {
+            rb.linearDamping = mudDrag;  // Increase drag = harder to move
+            updatedSpeed = moveSpeed * 0.8f; // Reduce speed
+        }
+        else
+        {
+            rb.linearDamping = normalDrag;
+            updatedSpeed = moveSpeed;
+        }
+    }
+
+    int GetTerrainTextureIndex()
+    {
+        Terrain terrain = Terrain.activeTerrain;
+        if (terrain == null) return 0;
+
+        Vector3 playerPos = transform.position;
+        Vector3 terrainPos = playerPos - terrain.transform.position;
+        TerrainData terrainData = terrain.terrainData;
+
+        float normX = terrainPos.x / terrainData.size.x;
+        float normZ = terrainPos.z / terrainData.size.z;
+
+        int mapX = Mathf.Clamp(Mathf.RoundToInt(normX * terrainData.alphamapWidth), 0, terrainData.alphamapWidth - 1);
+        int mapZ = Mathf.Clamp(Mathf.RoundToInt(normZ * terrainData.alphamapHeight), 0, terrainData.alphamapHeight - 1);
+
+        float[,,] alphas = terrainData.GetAlphamaps(mapX, mapZ, 1, 1);
+
+        int maxIndex = 0;
+        float maxValue = 0f;
+
+        for (int i = 0; i < alphas.GetLength(2); i++)
+        {
+            if (alphas[0, 0, i] > maxValue)
             {
-                rb.mass += Constants.SLOP_MASS_INCREASE;
-            }
-            else if (rb.mass < Constants.MAX_MASS)
-            {
-                rb.mass = Constants.MAX_MASS;
+                maxIndex = i;
+                maxValue = alphas[0, 0, i];
             }
             animator.SetTrigger("Eat");
         }
+        return maxIndex;
     }
+
 }
