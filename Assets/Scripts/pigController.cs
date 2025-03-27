@@ -57,7 +57,7 @@ public class pigController : MonoBehaviour
 
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
+        UpdateFriction(); // Adding Friction based on ground layer
         // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
@@ -78,7 +78,7 @@ public class pigController : MonoBehaviour
         if (!isGrounded)
         {
             rb.AddForce(Vector3.down * 40f, ForceMode.Acceleration);
-            UpdateFriction(); // Adding Friction based on ground layer
+
         }
 
         if (moveDirection.magnitude >= 0.1f)
