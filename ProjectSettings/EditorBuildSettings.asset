@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/scenes/Map_1.unity
     guid: 849f9b1e0ddd91d4189329b2bb74d5f7
   - enabled: 1
+    path: Assets/scenes/HUD.unity
+    guid: 99d76693fb36cea44907f72cd722f521
+  - enabled: 1
     path: Assets/scenes/Settings.unity
     guid: 7fa421928fbf2c247ab10f62c12baf41
   - enabled: 1

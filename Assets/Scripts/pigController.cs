@@ -6,8 +6,10 @@ public class pigController : MonoBehaviour
 
 
     [Header("Movement Settings")]
-    public float moveSpeed = 5f;
+    public float baseSpeed = 5f;
     public float turnSpeed = 200f;
+    private float moveSpeed;
+
 
     [Header("Jump Settings")]
     public float jumpForce = 6f;
@@ -17,7 +19,25 @@ public class pigController : MonoBehaviour
 
     private Rigidbody rb;
     private Animator animator;
+    private Collider playerCollider;
     private bool isGrounded;
+
+    // // Friction values
+    // [Header("Friction Materials")]
+    // public PhysicsMaterial normalMaterial;
+    // public PhysicsMaterial iceMaterial;
+    // public PhysicsMaterial mudMaterial;
+
+    [Header("Friction Settings")]
+    public float normalDrag = 1f;
+    public float iceDrag = 0.2f;
+    public float mudDrag = 5f;
+
+    // relates to the ground layer levels
+    [Header("Terrain Layer Mapping")]
+    public int groundSoilIndex = 1; // Adjust based on your terrain layer order
+    public int iceIndex = 2;
+    public int mudIndex = 4;
 
     private float inputHorizontal;
     private float inputVertical;
@@ -26,6 +46,7 @@ public class pigController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        playerCollider = GetComponent<Collider>();
     }
 
     void Update()
@@ -57,6 +78,7 @@ public class pigController : MonoBehaviour
         if (!isGrounded)
         {
             rb.AddForce(Vector3.down * 40f, ForceMode.Acceleration);
+            UpdateFriction(); // Adding Friction based on ground layer
         }
 
         if (moveDirection.magnitude >= 0.1f)
@@ -76,4 +98,63 @@ public class pigController : MonoBehaviour
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
         }
     }
+
+    void UpdateFriction()
+    {
+        int terrainIndex = GetTerrainTextureIndex();
+
+        if (terrainIndex == groundSoilIndex)
+        {
+            rb.linearDamping = normalDrag;
+            moveSpeed = baseSpeed;
+        }
+        else if (terrainIndex == iceIndex)
+        {
+            rb.linearDamping = iceDrag;  // Reduce drag = more slippery
+            moveSpeed = baseSpeed * 1.2f; // Slight speed boost
+        }
+        else if (terrainIndex == mudIndex)
+        {
+            rb.linearDamping = mudDrag;  // Increase drag = harder to move
+            moveSpeed = baseSpeed * 0.3f; // Reduce speed
+        }
+        else
+        {
+            rb.linearDamping = normalDrag;
+            moveSpeed = baseSpeed;
+        }
+    }
+
+    int GetTerrainTextureIndex()
+    {
+        Terrain terrain = Terrain.activeTerrain;
+        if (terrain == null) return 0;
+
+        Vector3 playerPos = transform.position;
+        Vector3 terrainPos = playerPos - terrain.transform.position;
+        TerrainData terrainData = terrain.terrainData;
+
+        float normX = terrainPos.x / terrainData.size.x;
+        float normZ = terrainPos.z / terrainData.size.z;
+
+        int mapX = Mathf.Clamp(Mathf.RoundToInt(normX * terrainData.alphamapWidth), 0, terrainData.alphamapWidth - 1);
+        int mapZ = Mathf.Clamp(Mathf.RoundToInt(normZ * terrainData.alphamapHeight), 0, terrainData.alphamapHeight - 1);
+
+        float[,,] alphas = terrainData.GetAlphamaps(mapX, mapZ, 1, 1);
+
+        int maxIndex = 0;
+        float maxValue = 0f;
+
+        for (int i = 0; i < alphas.GetLength(2); i++)
+        {
+            if (alphas[0, 0, i] > maxValue)
+            {
+                maxIndex = i;
+                maxValue = alphas[0, 0, i];
+            }
+        }
+
+        return maxIndex;
+    }
+
 }
