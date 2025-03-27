@@ -120,7 +120,6 @@ public class pigController : MonoBehaviour
         {
             isBoosted = false;
             moveSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
-            animator.SetTrigger("TurboEnd");
             Debug.Log("Turbo ended!");
         }
     }
