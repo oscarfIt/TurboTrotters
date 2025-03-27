@@ -33,4 +33,9 @@ public class TurboPoints
         }
     }
 
+    public int getPoints()
+    {
+        return points;
+    }
+
 }
