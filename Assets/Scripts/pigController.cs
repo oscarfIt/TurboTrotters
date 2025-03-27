@@ -81,6 +81,7 @@ public class pigController : MonoBehaviour
         if (jumped && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            jumped = false;
             Debug.Log("Jumped!");
         }
     }
