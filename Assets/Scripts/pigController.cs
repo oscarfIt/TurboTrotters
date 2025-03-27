@@ -1,26 +1,66 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
 public class pigController : MonoBehaviour
 {
 
-
+    public PigInputActions pigControls;
+    public TurboPoints turboPoints;
     [Header("Movement Settings")]
+
+    // Constants
     public float baseSpeed = 5f;
     public float turnSpeed = 200f;
-    private float moveSpeed;
-
+    public float jumpForce = 600f;
+    public float groundDistance = 0.3f;
+    public float downwardsForce = 200f;
 
     [Header("Jump Settings")]
-    public float jumpForce = 6f;
     public Transform groundCheck;
-    public float groundDistance = 0.3f;
     public LayerMask groundMask;
 
     private Rigidbody rb;
     private Animator animator;
     private Collider playerCollider;
     private bool isGrounded;
+    private Vector3 previousPosition;
+    private Vector3 originalScale;
+
+    private InputAction move;
+    private InputAction jump;
+    private InputAction turboBoost;
+    private double turboEndTime;
+    private bool isBoosted = false;
+
+    // TODO: Probably a better way to deal with these two
+    private Vector2 inputDirection = Vector2.zero;
+    Vector3 moveDirection = Vector3.zero;
+
+    private void Awake()
+    {
+        pigControls = new PigInputActions();
+    }
+
+    private void OnEnable()
+    {
+        move = pigControls.Pig.Movement;
+        move.Enable();
+
+        jump = pigControls.Pig.Jump;
+        jump.Enable();
+        jump.performed += Jump;
+
+        turboBoost = pigControls.Pig.TurboBoost;
+        turboBoost.Enable();
+        turboBoost.performed += TurboBoost;
+    }
+
+    private void OnDisable()
+    {
+        move.Disable();
+        jump.Disable();
+    }
 
     // // Friction values
     // [Header("Friction Materials")]
@@ -46,14 +86,17 @@ public class pigController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        originalScale = transform.localScale;
+        previousPosition = transform.position;
+        rb.mass = Constants.MIN_MASS;
+        turboPoints = new TurboPoints();
         playerCollider = GetComponent<Collider>();
     }
 
     void Update()
     {
         // Get input
-        inputHorizontal = Input.GetAxis("Horizontal");
-        inputVertical = Input.GetAxis("Vertical");
+        inputDirection = move.ReadValue<Vector2>();
 
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -65,20 +108,19 @@ public class pigController : MonoBehaviour
         }
 
         // Update Animator
-        float speed = new Vector2(inputHorizontal, inputVertical).magnitude;
+        float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
         animator.SetFloat("Speed", speed);
         animator.SetBool("IsGrounded", isGrounded);
     }
 
     void FixedUpdate()
     {
-        Vector3 moveDirection = new Vector3(inputHorizontal, 0, inputVertical).normalized;
+        moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
 
-        // Apply extra downward force if in the air
-        if (!isGrounded)
+        // Apply extra downward force if in the air (if it's not moving upwards)
+        if (!isGrounded && rb.linearVelocity.y <= 0)
         {
-            rb.AddForce(Vector3.down * 40f, ForceMode.Acceleration);
-
+            rb.AddForce(Vector3.down * downwardsForce, ForceMode.Acceleration);
         }
 
         if (moveDirection.magnitude >= 0.1f)
