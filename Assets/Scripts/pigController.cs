@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
 public class pigController : MonoBehaviour
 {
 
-
+    public PigInputActions pigControls;
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float turnSpeed = 200f;
@@ -19,8 +20,29 @@ public class pigController : MonoBehaviour
     private Animator animator;
     private bool isGrounded;
 
-    private float inputHorizontal;
-    private float inputVertical;
+    private InputAction move;
+    private InputAction jump;
+    private Vector2 inputDirection = Vector2.zero;
+
+    private void Awake()
+    {
+        pigControls = new PigInputActions();
+    }
+
+    private void OnEnable()
+    {
+        move = pigControls.Pig.Movement;
+        move.Enable();
+
+        jump = pigControls.Pig.Jump;
+        jump.Enable();
+    }
+
+    private void OnDisable()
+    {
+        move.Disable();
+        jump.Disable();
+    }
 
     void Start()
     {
@@ -31,8 +53,7 @@ public class pigController : MonoBehaviour
     void Update()
     {
         // Get input
-        inputHorizontal = Input.GetAxis("Horizontal");
-        inputVertical = Input.GetAxis("Vertical");
+        inputDirection = move.ReadValue<Vector2>();
 
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -44,14 +65,14 @@ public class pigController : MonoBehaviour
         }
 
         // Update Animator
-        float speed = new Vector2(inputHorizontal, inputVertical).magnitude;
+        float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
         animator.SetFloat("Speed", speed);
         animator.SetBool("IsGrounded", isGrounded);
     }
 
     void FixedUpdate()
     {
-        Vector3 moveDirection = new Vector3(inputHorizontal, 0, inputVertical).normalized;
+        Vector3 moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
 
         // Apply extra downward force if in the air
         if (!isGrounded)
