@@ -10,7 +10,8 @@ public class pigController : MonoBehaviour
     [Header("Movement Settings")]
 
     // Constants
-    public float baseSpeed = 5f;
+    public float moveSpeed = 5f;
+    private float updatedSpeed;
     public float turnSpeed = 200f;
     public float jumpForce = 600f;
     public float groundDistance = 0.3f;
@@ -42,19 +43,19 @@ public class pigController : MonoBehaviour
         pigControls = new PigInputActions();
     }
 
-    private void OnEnable()
-    {
-        move = pigControls.Pig.Movement;
-        move.Enable();
+    // private void OnEnable()
+    // {
+    //     move = pigControls.Pig.Movement;
+    //     move.Enable();
 
-        jump = pigControls.Pig.Jump;
-        jump.Enable();
-        jump.performed += Jump;
+    //     jump = pigControls.Pig.Jump;
+    //     jump.Enable();
+    //     jump.performed += Jump;
 
-        turboBoost = pigControls.Pig.TurboBoost;
-        turboBoost.Enable();
-        turboBoost.performed += TurboBoost;
-    }
+    //     turboBoost = pigControls.Pig.TurboBoost;
+    //     turboBoost.Enable();
+    //     turboBoost.performed += TurboBoost;
+    // }
 
     private void OnDisable()
     {
@@ -148,22 +149,22 @@ public class pigController : MonoBehaviour
         if (terrainIndex == groundSoilIndex)
         {
             rb.linearDamping = normalDrag;
-            moveSpeed = baseSpeed;
+            updatedSpeed = moveSpeed;
         }
         else if (terrainIndex == iceIndex)
         {
             rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            moveSpeed = baseSpeed * 1.2f; // Slight speed boost
+            updatedSpeed = moveSpeed * 1.2f; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
             rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            moveSpeed = baseSpeed * 0.8f; // Reduce speed
+            updatedSpeed = moveSpeed * 0.8f; // Reduce speed
         }
         else
         {
             rb.linearDamping = normalDrag;
-            moveSpeed = baseSpeed;
+            updatedSpeed = moveSpeed;
         }
     }
 
