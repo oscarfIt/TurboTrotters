@@ -29,6 +29,8 @@ public class pigController : MonoBehaviour
     private InputAction move;
     private InputAction jump;
     private InputAction turboBoost;
+    private double turboEndTime;
+    private bool isBoosted = false;
 
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
@@ -113,6 +115,14 @@ public class pigController : MonoBehaviour
         float distanceTravelled = Vector3.Distance(previousPosition, transform.position);
         previousPosition = transform.position;
         CardioEffect(distanceTravelled);
+
+        if (isBoosted && Time.timeAsDouble >= turboEndTime)
+        {
+            isBoosted = false;
+            moveSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
+            animator.SetTrigger("TurboEnd");
+            Debug.Log("Turbo ended!");
+        }
     }
 
     private void Jump(InputAction.CallbackContext context)
@@ -123,12 +133,15 @@ public class pigController : MonoBehaviour
         }
     }
 
-    // TODO: Change this to increase the speed for a short duration
     private void TurboBoost(InputAction.CallbackContext context)
     {
         if (isGrounded && turboPoints.usePoint())
         {
-            rb.AddForce(moveDirection * moveSpeed * Constants.TURBO_BOOST_MULTIPLIER, ForceMode.Impulse);
+            isBoosted = true;
+            animator.SetTrigger("TurboBoost");
+            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
+            moveSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
+            Debug.Log("Turbo activated!");
         }
     }
 
