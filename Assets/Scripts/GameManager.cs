@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     public void StartRace()
     {
         SceneManager.LoadScene("Map_1"); // Load the race track
+        // SceneManager.LoadScene("HUD", LoadSceneMode.Additive);
         // HUDManager.Instance.SetPlayerNames(playerNames);
     }
 
