@@ -6,6 +6,7 @@ public class pigController : MonoBehaviour
 {
 
     public PigInputActions pigControls;
+    public TurboPoints turboPoints;
     [Header("Movement Settings")]
 
     // Constants
@@ -25,7 +26,11 @@ public class pigController : MonoBehaviour
 
     private InputAction move;
     private InputAction jump;
+    private InputAction turboBoost;
+
+    // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
+    Vector3 moveDirection = Vector3.zero;
 
     private void Awake()
     {
@@ -40,6 +45,10 @@ public class pigController : MonoBehaviour
         jump = pigControls.Pig.Jump;
         jump.Enable();
         jump.performed += Jump;
+
+        turboBoost = pigControls.Pig.TurboBoost;
+        turboBoost.Enable();
+        turboBoost.performed += TurboBoost;
     }
 
     private void OnDisable()
@@ -71,7 +80,7 @@ public class pigController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
+        moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
 
         // Apply extra downward force if in the air (if it's not moving upwards)
         if (!isGrounded && rb.linearVelocity.y <= 0)
@@ -105,6 +114,15 @@ public class pigController : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             Debug.Log("Jumping!");
+        }
+    }
+
+    // TODO: Change this to increase the speed for a short duration
+    private void TurboBoost(InputAction.CallbackContext context)
+    {
+        if (isGrounded && turboPoints.usePoint())
+        {
+            rb.AddForce(moveDirection * moveSpeed * Constants.TURBO_BOOST_MULTIPLIER, ForceMode.Impulse);
         }
     }
 }
