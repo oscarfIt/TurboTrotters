@@ -23,6 +23,8 @@ public class pigController : MonoBehaviour
     private Rigidbody rb;
     private Animator animator;
     private bool isGrounded;
+    private Vector3 previousPosition;
+    private float totalDistanceTravelled = 0f;
 
     private InputAction move;
     private InputAction jump;
@@ -61,6 +63,7 @@ public class pigController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        previousPosition = transform.position;
         rb.mass = Constants.MIN_MASS;
         turboPoints = new TurboPoints();
     }
@@ -86,7 +89,6 @@ public class pigController : MonoBehaviour
         // Apply extra downward force if in the air (if it's not moving upwards)
         if (!isGrounded && rb.linearVelocity.y <= 0)
         {
-            Debug.Log("Applying downwards force to pig!");
             rb.AddForce(Vector3.down * downwardsForce, ForceMode.Acceleration);
         }
 
@@ -107,6 +109,10 @@ public class pigController : MonoBehaviour
             rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
             rb.angularVelocity = Vector3.zero;
         }
+        float distanceTravelled = Vector3.Distance(previousPosition, transform.position);
+        totalDistanceTravelled += distanceTravelled;
+        previousPosition = transform.position;
+        DecreaseMass();
     }
 
     private void Jump(InputAction.CallbackContext context)
@@ -114,7 +120,6 @@ public class pigController : MonoBehaviour
         if (isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("Jumping!");
         }
     }
 
@@ -125,6 +130,20 @@ public class pigController : MonoBehaviour
         {
             rb.AddForce(moveDirection * moveSpeed * Constants.TURBO_BOOST_MULTIPLIER, ForceMode.Impulse);
         }
+    }
+
+    private void DecreaseMass()
+    {
+        float newMass = rb.mass - (Constants.MASS_DECREASE_MULTIPLIER * totalDistanceTravelled);
+        if (newMass > Constants.MIN_MASS)
+        {
+            rb.mass = newMass;
+        }
+        else if (rb.mass > Constants.MIN_MASS)
+        {
+            rb.mass = Constants.MIN_MASS;
+        }
+        Debug.Log("Mass: " + rb.mass.ToString());
     }
 
     private void OnTriggerEnter(Collider other)
