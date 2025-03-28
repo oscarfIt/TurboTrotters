@@ -203,6 +203,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  jumpSound: {fileID: 8300000, guid: 7aafe7042f43b724799227e5c7613a3b, type: 3}
+  footstepSound: {fileID: 8300000, guid: 2abdd41557920db4ca9f3ac447c3424a, type: 3}
+  stepInterval: 0.3
 --- !u!114 &8830203074779576915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: adf0ab82097d9db458142121116df705, type: 3}
+  m_Actions: {fileID: -944628639613478452, guid: 2aa9bb363ecd4d74ab57a189c5a9c5f3, type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -229,55 +232,19 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8809220426255031718}
-        m_TargetAssemblyTypeName: pigController, Assembly-CSharp
-        m_MethodName: OnMove
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 18f4f3e4-65cd-402d-a977-79d96b089a0a
-    m_ActionName: 'Pig/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/DualShock4GamepadHID/dpad/up,/DualShock4GamepadHID/dpad/down,/DualShock4GamepadHID/dpad/left,/DualShock4GamepadHID/dpad/right,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
+    m_ActionName: 'Pig/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8809220426255031718}
-        m_TargetAssemblyTypeName: pigController, Assembly-CSharp
-        m_MethodName: OnJump
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 1c4e492b-bc3d-4b1b-9ef1-aa7d2e44809b
-    m_ActionName: 'Pig/Jump[/Keyboard/space,/DualShock4GamepadHID/buttonSouth,/Keyboard/l]'
+    m_ActionName: 'Pig/Jump[/Keyboard/space,/Keyboard/l]'
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8809220426255031718}
-        m_TargetAssemblyTypeName: pigController, Assembly-CSharp
-        m_MethodName: OnTurboBoost
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 9e8ae0a9-8b39-466c-8c97-a26f45f92e50
-    m_ActionName: 'Pig/TurboBoost[/Keyboard/leftShift,/DualShock4GamepadHID/leftTrigger,/Keyboard/k]'
+    m_ActionName: 'Pig/TurboBoost[/Keyboard/leftShift,/Keyboard/k]'
   m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: 'KeyBoard[WASD]'
   m_DefaultActionMap: Pig
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
