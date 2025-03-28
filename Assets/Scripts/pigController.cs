@@ -54,6 +54,7 @@ public class pigController : MonoBehaviour
 
     void Start()
     {
+        // HUDManager.Instance.UpdateHUDPosition(1, 2);
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pigControls = GetComponent<PlayerInput>();

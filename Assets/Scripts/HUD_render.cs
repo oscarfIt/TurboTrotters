@@ -7,6 +7,8 @@ public class HUD_render : MonoBehaviour
     void Start()
     {
         SceneManager.LoadScene("HUD", LoadSceneMode.Additive);
+        //HUDManager.Instance.UpdateHUDPosition(1, 2);
+
     }
 
     // Update is called once per frame

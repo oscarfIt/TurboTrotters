@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 166594754}
   - component: {fileID: 166594753}
   m_Layer: 5
-  m_Name: Pos
+  m_Name: Pos4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1891,7 +1891,7 @@ GameObject:
   - component: {fileID: 1037394744}
   - component: {fileID: 1037394743}
   m_Layer: 5
-  m_Name: Pos
+  m_Name: Pos1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2619,11 +2619,21 @@ MonoBehaviour:
   - Blue
   - Green
   - Yellow
+  playerPositions:
+  - 
+  - 
+  - 
+  - 
   playerNameTexts:
   - {fileID: 278962583}
   - {fileID: 1523890127}
   - {fileID: 1336066382}
   - {fileID: 518643359}
+  playerPositionsTexts:
+  - {fileID: 1037394743}
+  - {fileID: 1495428679}
+  - {fileID: 1849742654}
+  - {fileID: 166594753}
 --- !u!114 &1454173663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2723,7 +2733,7 @@ GameObject:
   - component: {fileID: 1495428680}
   - component: {fileID: 1495428679}
   m_Layer: 5
-  m_Name: Pos
+  m_Name: Pos2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3502,7 +3512,7 @@ GameObject:
   - component: {fileID: 1849742655}
   - component: {fileID: 1849742654}
   m_Layer: 5
-  m_Name: Pos
+  m_Name: Pos3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
