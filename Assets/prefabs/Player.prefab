@@ -190,9 +190,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9f0d6bc905a974bb7c0192c35c8f01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  pigControls: {fileID: 0}
   moveSpeed: 5
   turnSpeed: 200
-  jumpForce: 6
+  jumpForce: 600
   groundDistance: 0.3
   downwardsForce: 200
   groundCheck: {fileID: 3708866456950091326}

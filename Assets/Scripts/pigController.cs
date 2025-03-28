@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
@@ -6,6 +7,7 @@ using UnityEngine.InputSystem;
 public class pigController : MonoBehaviour
 {
 
+    public Camera mainCamera;
     public PlayerInput pigControls;
     public TurboPoints turboPoints;
     [Header("Movement Settings")]
@@ -34,12 +36,14 @@ public class pigController : MonoBehaviour
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
     Vector3 moveDirection = Vector3.zero;
+    private bool beingKicked = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pigControls = GetComponent<PlayerInput>();
+        mainCamera = Camera.main;
         originalScale = transform.localScale;
         previousPosition = transform.position;
         rb.mass = Constants.MIN_MASS;
@@ -64,6 +68,11 @@ public class pigController : MonoBehaviour
 
     void Update()
     {
+        // Check if the pig is in view of the camera
+        if (!IsInView())
+        {
+            KickPig();
+        }
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -88,8 +97,21 @@ public class pigController : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.Log($"Input direction: {inputDirection}");
         moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
+        Debug.Log($"Move direction: {moveDirection}");
 
+        if (beingKicked)
+        {
+            if (isGrounded)
+            {
+                beingKicked = false;
+            }
+            else
+            {
+                return;
+            }
+        }
         // Apply extra downward force if in the air (if it's not moving upwards)
         if (!isGrounded && rb.linearVelocity.y <= 0)
         {
@@ -168,6 +190,33 @@ public class pigController : MonoBehaviour
                 rb.mass = Constants.MAX_MASS;
             }
             animator.SetTrigger("Eat");
+        }
+    }
+
+    // For checking if a pig falls too far behind
+    // KICK IT BACK!
+    private bool IsInView()
+    {
+        Vector3 viewportPosition = mainCamera.WorldToViewportPoint(transform.position);
+
+        return viewportPosition.x >= 0.1; // Note we only care if the pig is to the left of the camera
+    }
+
+    private void KickPig()
+    {
+        // Check if the object is to the left of the camera's field of view
+        Vector3 viewportPosition = mainCamera.WorldToViewportPoint(transform.position);
+
+        if (viewportPosition.x < 0.1)
+        {
+            Vector3 kickExplosionPosition = new Vector3(transform.position.x - 1, transform.position.y, transform.position.z);
+            rb.AddExplosionForce(100, kickExplosionPosition, 10f, 0.5f, ForceMode.Impulse);
+            rb.linearVelocity = new Vector3(100, 0, 0);
+            beingKicked = true;
+            // Debug.Log($"Kick explosion position: {kickExplosionPosition}");
+            // Debug.Log($"Transform position: {transform.position}");
+            // rb.AddExplosionForce(10, transform.position, 10f, 0.5f, ForceMode.Impulse);
+            // rb.AddForce(kickDirection * 1000, ForceMode.Impulse);
         }
     }
 }
