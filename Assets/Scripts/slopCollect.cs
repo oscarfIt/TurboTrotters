@@ -5,9 +5,12 @@ public class slopCollect : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public float rotationSpeed = 55f;
 
+    private AudioSource audioSource;
+    private SphereCollider slopCollider;
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+        slopCollider = GetComponent<SphereCollider>();
     }
 
     // Update is called once per frame
@@ -20,7 +23,17 @@ public class slopCollect : MonoBehaviour
     {
         if (other.CompareTag("Player")) 
         {
-            Destroy(gameObject);
+            Animator animator = other.GetComponent<Animator>();
+            animator.SetTrigger("Eat");
+            audioSource.Play();
+            slopCollider.enabled = false;
+
+
+            foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+            {
+                renderer.enabled = false;
+            }
+            Destroy(gameObject, audioSource.clip.length);
         }
     }
 }
