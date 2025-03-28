@@ -3,6 +3,9 @@ using UnityEngine;
 public class turboCollect : MonoBehaviour
 {
     public float rotationSpeed = 55f;
+
+    private AudioSource audioSource;
+    private MeshCollider turboCollider;
     void Start()
     {
         
@@ -18,7 +21,10 @@ public class turboCollect : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            audioSource.Play();
+            turboCollider.enabled = false;
+            GetComponent<MeshRenderer>().enabled = false;
+            Destroy(gameObject, audioSource.clip.length);
         }
     }
 }

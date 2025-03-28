@@ -35,6 +35,11 @@ public class pigController : MonoBehaviour
     private Vector2 inputDirection = Vector2.zero;
     Vector3 moveDirection = Vector3.zero;
 
+    public AudioClip jumpSound;
+    private AudioSource audioSource;
+    public AudioClip footstepSound;
+    public float stepInterval = 0.3f;
+    private float stepTimer;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -44,6 +49,7 @@ public class pigController : MonoBehaviour
         previousPosition = transform.position;
         rb.mass = Constants.MIN_MASS;
         turboPoints = new TurboPoints();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -81,8 +87,22 @@ public class pigController : MonoBehaviour
         if (jumped && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
             Debug.Log("Jumped!");
         }
+        bool isMoving = new Vector2(inputDirection.x, inputDirection.y).magnitude > 0.1f;
+        if (isMoving && isGrounded)
+        {
+            stepTimer += Time.deltaTime;
+            if (stepTimer >= stepInterval)
+            {
+                if (footstepSound != null && audioSource != null) { audioSource.PlayOneShot(footstepSound); }
+                stepTimer = 0f;
+            }
+
+
+        }
+        else { stepTimer = stepInterval; }
     }
 
     void FixedUpdate()
