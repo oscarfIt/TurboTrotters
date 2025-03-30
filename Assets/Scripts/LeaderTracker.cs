@@ -24,16 +24,21 @@ public class LeaderTracker : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (currentLeader != null)
-            {
-                transform.SetParent(null);
-            }
-
-            currentLeader = other.gameObject;
-            transform.SetParent(currentLeader.transform);
-
-            // Reset the object's position relative to the new player
-            transform.localPosition = Vector3.zero; // You can modify this to have an offset if needed
+            SetNewLeader(other.gameObject);
         }
+    }
+
+    private void SetNewLeader(GameObject newLeader)
+    {
+        if (currentLeader != null)
+        {
+            transform.SetParent(null);
+        }
+
+        currentLeader = newLeader;
+        transform.SetParent(currentLeader.transform);
+
+        // Reset the object's position relative to the new player
+        transform.localPosition = Vector3.zero; // You can modify this to have an offset if needed
     }
 }
