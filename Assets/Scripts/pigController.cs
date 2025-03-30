@@ -12,7 +12,7 @@ public class pigController : MonoBehaviour
     [Header("Movement Settings")]
 
     // Constants
-    public float moveSpeed = 5f;
+    public float baseSpeed = 5f;
     public float turnSpeed = 200f;
     public float jumpForce = 600f;
     public float groundDistance = 0.3f;
@@ -148,14 +148,14 @@ public class pigController : MonoBehaviour
         {
             boosting = true;
             turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
-            moveSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
+            baseSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
             boosted = false;
             Debug.Log("Turbo activated!");
         }
         if (boosting && Time.timeAsDouble >= turboEndTime)
         {
             boosting = false;
-            moveSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
+            baseSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
             Debug.Log("Turbo ended!");
         }
     }
@@ -234,22 +234,22 @@ public class pigController : MonoBehaviour
         if (terrainIndex == groundSoilIndex)
         {
             rb.linearDamping = normalDrag;
-            terrainSpeed = moveSpeed;
+            terrainSpeed = baseSpeed;
         }
         else if (terrainIndex == iceIndex)
         {
             rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            terrainSpeed = moveSpeed * 1.2f; // Slight speed boost
+            terrainSpeed = baseSpeed * 1.2f; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
             rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            terrainSpeed = moveSpeed * 0.8f; // Reduce speed
+            terrainSpeed = baseSpeed * 0.8f; // Reduce speed
         }
         else
         {
             rb.linearDamping = normalDrag;
-            terrainSpeed = moveSpeed;
+            terrainSpeed = baseSpeed;
         }
         return terrainSpeed;
     }
