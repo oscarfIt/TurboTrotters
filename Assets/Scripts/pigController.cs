@@ -93,7 +93,6 @@ public class pigController : MonoBehaviour
         UpdateMoveAnimations(speed);
         UpdateSounds(speed);
         UpdateJump();
-        Debug.Log($"Mass = {rb.mass} Scale = {transform.localScale} Speed = {currentSpeed}");
     }
 
     void FixedUpdate()
