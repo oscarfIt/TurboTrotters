@@ -8,4 +8,5 @@ public struct Constants
     public const float DISTANCE_SCALE_DECREASE = 0.001f;
     public const float SLOP_SCALE_INCREASE = 0.2f;
     public const float SLOP_MASS_INCREASE = 2;
+    public const float MOVE_DETECTION_THRESHOLD = 0.1f;
 }
