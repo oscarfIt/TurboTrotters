@@ -60,11 +60,11 @@ public class pigController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pigControls = GetComponent<PlayerInput>();
-        transform.localScale = new Vector3(Constants.MIN_SCALE, Constants.MIN_SCALE, Constants.MIN_SCALE);
+        transform.localScale = new Vector3(PigScale.MIN, PigScale.MIN, PigScale.MIN);
         minScaleMagnitude = transform.localScale.magnitude;
         previousPosition = transform.position;
         currentSpeed = baseSpeed;
-        rb.mass = Constants.MIN_MASS;
+        rb.mass = PigMass.MIN;
         turboPoints = new TurboPoints();
         audioSource = GetComponent<AudioSource>();
     }
@@ -156,7 +156,7 @@ public class pigController : MonoBehaviour
         {
             boosting = true;
             boosted = false;
-            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
+            turboEndTime = Time.timeAsDouble + TurboBoost.DURATION;
             Debug.Log("Turbo activated!");
         }
         if (boosting)
@@ -164,12 +164,12 @@ public class pigController : MonoBehaviour
             if (Time.timeAsDouble >= turboEndTime)  // Boost has ended
             {
                 boosting = false;
-                multiplier = (1/Constants.TURBO_BOOST_MULTIPLIER);
+                multiplier = (1/TurboBoost.SPEED_MULTIPLIER);
                 Debug.Log("Turbo ended!");
             }
             else // Boost is active
             {
-                multiplier = Constants.TURBO_BOOST_MULTIPLIER;
+                multiplier = TurboBoost.SPEED_MULTIPLIER;
             }
         }
         return multiplier;
@@ -183,7 +183,7 @@ public class pigController : MonoBehaviour
 
     private void UpdateSounds(float speed)
     {
-        if (speed > Constants.MOVE_DETECTION_THRESHOLD && isGrounded)
+        if (speed > Movement.DETECTION_THRESHOLD && isGrounded)
         {
             stepTimer += Time.deltaTime;
             if (stepTimer >= stepInterval)
@@ -195,14 +195,13 @@ public class pigController : MonoBehaviour
         else { stepTimer = stepInterval; }
     }
 
-    // FIXME: Scale and mass changes at different rates
     private void CardioEffect(float distanceTravelled)
     {
-        if (distanceTravelled < Constants.MOVE_DETECTION_THRESHOLD) return;
-        float newMass = rb.mass - (Constants.DISTANCE_MASS_DECREASE * distanceTravelled);
-        float newScaleComponent = Constants.DISTANCE_SCALE_DECREASE * distanceTravelled;
+        if (distanceTravelled < Movement.DETECTION_THRESHOLD) return;
+        float newMass = rb.mass - (PigMass.DISTANCE_DECREASE * distanceTravelled);
+        float newScaleComponent = PigScale.DISTANCE_DECREASE * distanceTravelled;
         Vector3 newScale = transform.localScale - new Vector3(newScaleComponent, newScaleComponent, newScaleComponent);
-        rb.mass = Mathf.Clamp(newMass, Constants.MIN_MASS, Constants.MAX_MASS);
+        rb.mass = Mathf.Clamp(newMass, PigMass.MIN, PigMass.MAX);
         if (newScale.magnitude >= minScaleMagnitude)
         {
             transform.localScale = newScale;        
@@ -279,10 +278,10 @@ public class pigController : MonoBehaviour
 
     private void EatSlop(int factor)
     {
-        if (rb.mass < Constants.MAX_MASS - factor * Constants.SLOP_MASS_INCREASE)
+        if (rb.mass < PigMass.MAX - factor * PigMass.SLOP_INCREASE)
         {
-            rb.mass += factor * Constants.SLOP_MASS_INCREASE;
-            transform.localScale += new Vector3(factor * Constants.SLOP_SCALE_INCREASE, factor * Constants.SLOP_SCALE_INCREASE, factor * Constants.SLOP_SCALE_INCREASE);
+            rb.mass += factor * PigMass.SLOP_INCREASE;
+            transform.localScale += new Vector3(factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE);
         }
     }
 
