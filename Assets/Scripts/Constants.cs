@@ -1,6 +1,7 @@
 struct Movement
 {
     public const float DETECTION_THRESHOLD = 0.1f;
+    public const float SPEED_NUMERATOR = 100f;
 }
 
 

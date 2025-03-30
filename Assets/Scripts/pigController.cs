@@ -38,7 +38,7 @@ public class pigController : MonoBehaviour
     public int groundSoilIndex = 1; // Adjust based on your terrain layer order
     public int iceIndex = 2;
     public int mudIndex = 4;
-    private float baseSpeed = 5f;
+    private float baseSpeed = 20f;
     private float currentSpeed = 0f;
 
     // TODO: Probably a better way to deal with these two
@@ -93,6 +93,7 @@ public class pigController : MonoBehaviour
         UpdateMoveAnimations(speed);
         UpdateSounds(speed);
         UpdateJump();
+        Debug.Log($"Mass = {rb.mass} Scale = {transform.localScale} Speed = {currentSpeed}");
     }
 
     void FixedUpdate()
@@ -132,6 +133,7 @@ public class pigController : MonoBehaviour
         // Calculated based on terrain and turbo boost
         float terrainMultiplier = GetFrictionMultiplier();
         float turboMultiplier = GetTurboMultiplier();
+        baseSpeed = Movement.SPEED_NUMERATOR / rb.mass;
         currentSpeed = baseSpeed * terrainMultiplier * turboMultiplier;
     }
 
