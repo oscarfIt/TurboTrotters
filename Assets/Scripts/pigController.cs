@@ -23,7 +23,6 @@ public class pigController : MonoBehaviour
 
     private Rigidbody rb;
     private Animator animator;
-    private Collider playerCollider;
     private bool isGrounded;
     private Vector3 previousPosition;
     private Vector3 originalScale;
@@ -43,10 +42,6 @@ public class pigController : MonoBehaviour
     public int iceIndex = 2;
     public int mudIndex = 4;
     private float baseSpeed = 5f;
-
-
-    private float inputHorizontal;
-    private float inputVertical;
 
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
