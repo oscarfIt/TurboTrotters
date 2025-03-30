@@ -12,8 +12,6 @@ public class pigController : MonoBehaviour
     [Header("Movement Settings")]
 
     // Constants
-    public float moveSpeed = 5f;
-    private float updatedSpeed;
     public float turnSpeed = 200f;
     public float jumpForce = 600f;
     public float groundDistance = 0.3f;
@@ -25,7 +23,6 @@ public class pigController : MonoBehaviour
 
     private Rigidbody rb;
     private Animator animator;
-    private Collider playerCollider;
     private bool isGrounded;
     private Vector3 previousPosition;
     private Vector3 originalScale;
@@ -44,9 +41,8 @@ public class pigController : MonoBehaviour
     public int groundSoilIndex = 1; // Adjust based on your terrain layer order
     public int iceIndex = 2;
     public int mudIndex = 4;
-
-    private float inputHorizontal;
-    private float inputVertical;
+    private float baseSpeed = 5f;
+    private float currentSpeed = 0f;
 
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
@@ -65,6 +61,7 @@ public class pigController : MonoBehaviour
         pigControls = GetComponent<PlayerInput>();
         originalScale = transform.localScale;
         previousPosition = transform.position;
+        currentSpeed = baseSpeed;
         rb.mass = Constants.MIN_MASS;
         turboPoints = new TurboPoints();
         audioSource = GetComponent<AudioSource>();
@@ -91,39 +88,13 @@ public class pigController : MonoBehaviour
     {
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        UpdateFriction(); // Adding Friction based on ground layer
-
-        // Update Animator
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
-        animator.SetFloat("Speed", speed);
-        animator.SetBool("IsGrounded", isGrounded);
-        if (boosted && isGrounded && turboPoints.usePoint())
-        {
-            boosting = true;
-            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
-            moveSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
-            Debug.Log("Turbo activated!");
-        }
-        if (jumped && isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
-            Debug.Log("Jumped!");
-        }
-        bool isMoving = new Vector2(inputDirection.x, inputDirection.y).magnitude > 0.1f;
-        if (isMoving && isGrounded)
-        {
-            stepTimer += Time.deltaTime;
-            if (stepTimer >= stepInterval)
-            {
-                if (footstepSound != null && audioSource != null) { audioSource.PlayOneShot(footstepSound); }
-                stepTimer = 0f;
-            }
 
+        UpdateSpeed();
+        UpdateMoveAnimations(speed);
+        UpdateSounds(speed);
+        UpdateJump();
 
-        }
-        else { stepTimer = stepInterval; }
     }
 
     void FixedUpdate()
@@ -144,7 +115,7 @@ public class pigController : MonoBehaviour
 
             // Preserve Y velocity (gravity) while setting X/Z
             Vector3 currentVelocity = rb.linearVelocity;
-            Vector3 targetVelocity = moveDirection * updatedSpeed;
+            Vector3 targetVelocity = moveDirection * currentSpeed;
             rb.linearVelocity = new Vector3(targetVelocity.x, currentVelocity.y, targetVelocity.z);
         }
         else
@@ -156,16 +127,73 @@ public class pigController : MonoBehaviour
         float distanceTravelled = Vector3.Distance(previousPosition, transform.position);
         previousPosition = transform.position;
         CardioEffect(distanceTravelled);
-
-        if (boosting && Time.timeAsDouble >= turboEndTime)
-        {
-            boosting = false;
-            moveSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
-            Debug.Log("Turbo ended!");
-        }
     }
 
-    // FIXME: Scale and mass changes at different rates
+    private void UpdateSpeed()
+    {
+        // Calculated based on terrain and turbo boost
+        float terrainMultiplier = GetFrictionMultiplier();
+        float turboMultiplier = GetTurboMultiplier();
+        currentSpeed = baseSpeed * terrainMultiplier * turboMultiplier;
+    }
+
+    private void UpdateJump()
+    {
+        if (jumped && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
+            jumped = false;
+            Debug.Log("Jumped!");
+        }
+    }
+    
+    private float GetTurboMultiplier()
+    {
+        float multiplier = 1f;
+        if (boosted && isGrounded && turboPoints.usePoint())
+        {
+            boosting = true;
+            boosted = false;
+            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
+            Debug.Log("Turbo activated!");
+        }
+        if (boosting)
+        {
+            if (Time.timeAsDouble >= turboEndTime)  // Boost has ended
+            {
+                boosting = false;
+                multiplier = (1/Constants.TURBO_BOOST_MULTIPLIER);
+                Debug.Log("Turbo ended!");
+            }
+            else // Boost is active
+            {
+                multiplier = Constants.TURBO_BOOST_MULTIPLIER;
+            }
+        }
+        return multiplier;
+    }
+
+    private void UpdateMoveAnimations(float speed)
+    {
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("IsGrounded", isGrounded);
+    }
+
+    private void UpdateSounds(float speed)
+    {
+        if (speed > Constants.MOVE_DETECTION_THRESHOLD && isGrounded)
+        {
+            stepTimer += Time.deltaTime;
+            if (stepTimer >= stepInterval)
+            {
+                if (footstepSound != null && audioSource != null) { audioSource.PlayOneShot(footstepSound); }
+                stepTimer = 0f;
+            }
+        }
+        else { stepTimer = stepInterval; }
+    }
+
     // FIXME: Scale and mass changes at different rates
     private void CardioEffect(float distanceTravelled)
     {
@@ -212,30 +240,27 @@ public class pigController : MonoBehaviour
         }
     }
 
-    void UpdateFriction()
+    private float GetFrictionMultiplier()
     {
         int terrainIndex = GetTerrainTextureIndex();
+        float multiplier = 1f;
 
         if (terrainIndex == groundSoilIndex)
         {
-            rb.linearDamping = normalDrag;
-            updatedSpeed = moveSpeed;
+            rb.linearDamping = normalDrag;  // Normal drag
+            multiplier = 1f; // Normal speed
         }
         else if (terrainIndex == iceIndex)
         {
             rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            updatedSpeed = moveSpeed * 1.2f; // Slight speed boost
+            multiplier = 1.2f; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
             rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            updatedSpeed = moveSpeed * 0.8f; // Reduce speed
+            multiplier = 0.8f; // Reduce speed
         }
-        else
-        {
-            rb.linearDamping = normalDrag;
-            updatedSpeed = moveSpeed;
-        }
+        return multiplier;
     }
 
     int GetTerrainTextureIndex()
