@@ -42,6 +42,7 @@ public class pigController : MonoBehaviour
     public int iceIndex = 2;
     public int mudIndex = 4;
     private float baseSpeed = 5f;
+    private float currentSpeed = 0f;
 
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
@@ -60,6 +61,7 @@ public class pigController : MonoBehaviour
         pigControls = GetComponent<PlayerInput>();
         originalScale = transform.localScale;
         previousPosition = transform.position;
+        currentSpeed = baseSpeed;
         rb.mass = Constants.MIN_MASS;
         turboPoints = new TurboPoints();
         audioSource = GetComponent<AudioSource>();
@@ -144,14 +146,14 @@ public class pigController : MonoBehaviour
         {
             boosting = true;
             turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
-            baseSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
+            currentSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
             boosted = false;
             Debug.Log("Turbo activated!");
         }
         if (boosting && Time.timeAsDouble >= turboEndTime)
         {
             boosting = false;
-            baseSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
+            currentSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
             Debug.Log("Turbo ended!");
         }
     }
@@ -230,22 +232,22 @@ public class pigController : MonoBehaviour
         if (terrainIndex == groundSoilIndex)
         {
             rb.linearDamping = normalDrag;
-            terrainSpeed = baseSpeed;
+            terrainSpeed = currentSpeed;
         }
         else if (terrainIndex == iceIndex)
         {
             rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            terrainSpeed = baseSpeed * 1.2f; // Slight speed boost
+            terrainSpeed = currentSpeed * 1.2f; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
             rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            terrainSpeed = baseSpeed * 0.8f; // Reduce speed
+            terrainSpeed = currentSpeed * 0.8f; // Reduce speed
         }
         else
         {
             rb.linearDamping = normalDrag;
-            terrainSpeed = baseSpeed;
+            terrainSpeed = currentSpeed;
         }
         return terrainSpeed;
     }
