@@ -217,16 +217,7 @@ public class pigController : MonoBehaviour
         }
         else if (other.CompareTag("Slop"))
         {
-            transform.localScale += new Vector3(Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE);
-            float newMass = rb.mass + Constants.SLOP_MASS_INCREASE;
-            if (newMass < Constants.MAX_MASS)
-            {
-                rb.mass += Constants.SLOP_MASS_INCREASE;
-            }
-            else if (rb.mass < Constants.MAX_MASS)
-            {
-                rb.mass = Constants.MAX_MASS;
-            }
+            EatSlop(1);
             animator.SetTrigger("Eat");
         }
     }
@@ -284,6 +275,15 @@ public class pigController : MonoBehaviour
         }
 
         return maxIndex;
+    }
+
+    private void EatSlop(int factor)
+    {
+        if (rb.mass < Constants.MAX_MASS - factor * Constants.SLOP_MASS_INCREASE)
+        {
+            rb.mass += factor * Constants.SLOP_MASS_INCREASE;
+            transform.localScale += new Vector3(factor * Constants.SLOP_SCALE_INCREASE, factor * Constants.SLOP_SCALE_INCREASE, factor * Constants.SLOP_SCALE_INCREASE);
+        }
     }
 
 }
