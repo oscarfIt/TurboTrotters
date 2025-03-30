@@ -90,34 +90,13 @@ public class pigController : MonoBehaviour
     {
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        // Update Animator
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
 
         UpdateMoveAnimations(speed);
         UpdateSounds(speed);
+        UpdateJump();
+        UpdateTurboBoost();
 
-        if (boosted && isGrounded && turboPoints.usePoint())
-        {
-            boosting = true;
-            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
-            moveSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
-            boosted = false;
-            Debug.Log("Turbo activated!");
-        }
-        if (jumped && isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
-            jumped = false;
-            Debug.Log("Jumped!");
-        }
-        if (boosting && Time.timeAsDouble >= turboEndTime)
-        {
-            boosting = false;
-            moveSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
-            Debug.Log("Turbo ended!");
-        }
     }
 
     void FixedUpdate()
@@ -150,6 +129,35 @@ public class pigController : MonoBehaviour
         float distanceTravelled = Vector3.Distance(previousPosition, transform.position);
         previousPosition = transform.position;
         CardioEffect(distanceTravelled);
+    }
+
+    private void UpdateJump()
+    {
+        if (jumped && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
+            jumped = false;
+            Debug.Log("Jumped!");
+        }
+    }
+    
+    private void UpdateTurboBoost()
+    {
+        if (boosted && isGrounded && turboPoints.usePoint())
+        {
+            boosting = true;
+            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
+            moveSpeed *= Constants.TURBO_BOOST_MULTIPLIER;
+            boosted = false;
+            Debug.Log("Turbo activated!");
+        }
+        if (boosting && Time.timeAsDouble >= turboEndTime)
+        {
+            boosting = false;
+            moveSpeed /= Constants.TURBO_BOOST_MULTIPLIER;
+            Debug.Log("Turbo ended!");
+        }
     }
 
     private void UpdateMoveAnimations(float speed)
