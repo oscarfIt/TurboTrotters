@@ -13,7 +13,6 @@ public class pigController : MonoBehaviour
 
     // Constants
     public float moveSpeed = 5f;
-    private float updatedSpeed;
     public float turnSpeed = 200f;
     public float jumpForce = 600f;
     public float groundDistance = 0.3f;
@@ -92,8 +91,6 @@ public class pigController : MonoBehaviour
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        UpdateFriction(); // Adding Friction based on ground layer
-
         // Update Animator
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
 
@@ -133,7 +130,7 @@ public class pigController : MonoBehaviour
 
             // Preserve Y velocity (gravity) while setting X/Z
             Vector3 currentVelocity = rb.linearVelocity;
-            Vector3 targetVelocity = moveDirection * updatedSpeed;
+            Vector3 targetVelocity = moveDirection * ApplyFriction();
             rb.linearVelocity = new Vector3(targetVelocity.x, currentVelocity.y, targetVelocity.z);
         }
         else
@@ -220,30 +217,32 @@ public class pigController : MonoBehaviour
         }
     }
 
-    void UpdateFriction()
+    private float ApplyFriction()
     {
         int terrainIndex = GetTerrainTextureIndex();
+        float terrainSpeed;
 
         if (terrainIndex == groundSoilIndex)
         {
             rb.linearDamping = normalDrag;
-            updatedSpeed = moveSpeed;
+            terrainSpeed = moveSpeed;
         }
         else if (terrainIndex == iceIndex)
         {
             rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            updatedSpeed = moveSpeed * 1.2f; // Slight speed boost
+            terrainSpeed = moveSpeed * 1.2f; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
             rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            updatedSpeed = moveSpeed * 0.8f; // Reduce speed
+            terrainSpeed = moveSpeed * 0.8f; // Reduce speed
         }
         else
         {
             rb.linearDamping = normalDrag;
-            updatedSpeed = moveSpeed;
+            terrainSpeed = moveSpeed;
         }
+        return terrainSpeed;
     }
 
     int GetTerrainTextureIndex()
