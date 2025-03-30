@@ -25,7 +25,7 @@ public class pigController : MonoBehaviour
     private Animator animator;
     private bool isGrounded;
     private Vector3 previousPosition;
-    private Vector3 originalScale;
+    private Vector3 baseScale;
     private double turboEndTime;
     private bool jumped = false;
     private bool boosted = false;   // This is triggered by input
@@ -59,7 +59,7 @@ public class pigController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pigControls = GetComponent<PlayerInput>();
-        originalScale = transform.localScale;
+        baseScale = transform.localScale;
         previousPosition = transform.position;
         currentSpeed = baseSpeed;
         rb.mass = Constants.MIN_MASS;
@@ -205,16 +205,16 @@ public class pigController : MonoBehaviour
         }
         else if (rb.mass > Constants.MIN_MASS)
         {
-            transform.localScale = originalScale;
+            transform.localScale = baseScale;
             rb.mass = Constants.MIN_MASS;
         }
-        if (newScale.magnitude > originalScale.magnitude)
+        if (newScale.magnitude > baseScale.magnitude)
         {
             transform.localScale -= new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
         }
-        else if (transform.localScale.magnitude > originalScale.magnitude)
+        else if (transform.localScale.magnitude > baseScale.magnitude)
         {
-            transform.localScale = originalScale;
+            transform.localScale = baseScale;
         }
     }
 
