@@ -1,12 +1,42 @@
-public struct Constants
+struct Movement
 {
-    public const int MAX_MASS = 20;
-    public const int MIN_MASS = 5;
-    public const int TURBO_BOOST_MULTIPLIER = 2;
-    public const double TURBO_BOOST_DURATION = 1.5f;
-    public const float DISTANCE_MASS_DECREASE = 0.01f;
-    public const float DISTANCE_SCALE_DECREASE = 0.001f;
-    public const float SLOP_SCALE_INCREASE = 0.2f;
-    public const float SLOP_MASS_INCREASE = 2;
-    public const float MOVE_DETECTION_THRESHOLD = 0.1f;
+    public const float DETECTION_THRESHOLD = 0.1f;
+    public const float SPEED_NUMERATOR = 100f;
+}
+
+
+
+public struct TurboBoost
+{
+    public const int SPEED_MULTIPLIER = 2;
+    public const float DURATION = 1.5f;
+}
+
+
+
+public struct PigMass
+{
+    public const int MIN = 5;
+    public const int MAX = 20;
+    public const float SLOP_INCREASE = 2;
+    public const float DISTANCE_DECREASE = 0.1f;
+}
+
+
+public struct PigScale
+{
+    public const float MIN = 1f;
+    public const float MAX = 4f;
+    public const float SLOP_INCREASE = 0.2f;
+    public const float DISTANCE_DECREASE = 0.01f;
+}
+
+public struct TerrainFriction
+{
+    public const float DEFAULT_DRAG = 1f;
+    public const float ICE_DRAG = 0.2f;
+    public const float MUD_DRAG = 5f;
+    public const float DEFAULT_SPEED_MULTIPLIER = 1f;
+    public const float ICE_SPEED_MULTIPLIER = 1.2f;
+    public const float MUD_SPEED_MULTIPLIER = 0.8f;
 }

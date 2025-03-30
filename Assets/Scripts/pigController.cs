@@ -25,23 +25,20 @@ public class pigController : MonoBehaviour
     private Animator animator;
     private bool isGrounded;
     private Vector3 previousPosition;
-    private Vector3 originalScale;
+    private float minScaleMagnitude;
     private double turboEndTime;
     private bool jumped = false;
     private bool boosted = false;   // This is triggered by input
     private bool boosting = false;   // This is for knowing to reset the speed
 
     [Header("Friction Settings")]
-    public float normalDrag = 1f;
-    public float iceDrag = 0.2f;
-    public float mudDrag = 5f;
 
     // relates to the ground layer levels
     [Header("Terrain Layer Mapping")]
     public int groundSoilIndex = 1; // Adjust based on your terrain layer order
     public int iceIndex = 2;
     public int mudIndex = 4;
-    private float baseSpeed = 5f;
+    private float baseSpeed = 20f;
     private float currentSpeed = 0f;
 
     // TODO: Probably a better way to deal with these two
@@ -53,16 +50,18 @@ public class pigController : MonoBehaviour
     public AudioClip footstepSound;
     public float stepInterval = 0.3f;
     private float stepTimer;
+
     void Start()
     {
         // HUDManager.Instance.UpdateHUDPosition(1, 2);
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pigControls = GetComponent<PlayerInput>();
-        originalScale = transform.localScale;
+        transform.localScale = new Vector3(PigScale.MIN, PigScale.MIN, PigScale.MIN);
+        minScaleMagnitude = transform.localScale.magnitude;
         previousPosition = transform.position;
         currentSpeed = baseSpeed;
-        rb.mass = Constants.MIN_MASS;
+        rb.mass = PigMass.MIN;
         turboPoints = new TurboPoints();
         audioSource = GetComponent<AudioSource>();
     }
@@ -94,7 +93,7 @@ public class pigController : MonoBehaviour
         UpdateMoveAnimations(speed);
         UpdateSounds(speed);
         UpdateJump();
-
+        Debug.Log($"Mass = {rb.mass} Scale = {transform.localScale} Speed = {currentSpeed}");
     }
 
     void FixedUpdate()
@@ -134,6 +133,7 @@ public class pigController : MonoBehaviour
         // Calculated based on terrain and turbo boost
         float terrainMultiplier = GetFrictionMultiplier();
         float turboMultiplier = GetTurboMultiplier();
+        baseSpeed = Movement.SPEED_NUMERATOR / rb.mass;
         currentSpeed = baseSpeed * terrainMultiplier * turboMultiplier;
     }
 
@@ -155,7 +155,7 @@ public class pigController : MonoBehaviour
         {
             boosting = true;
             boosted = false;
-            turboEndTime = Time.timeAsDouble + Constants.TURBO_BOOST_DURATION;
+            turboEndTime = Time.timeAsDouble + TurboBoost.DURATION;
             Debug.Log("Turbo activated!");
         }
         if (boosting)
@@ -163,12 +163,12 @@ public class pigController : MonoBehaviour
             if (Time.timeAsDouble >= turboEndTime)  // Boost has ended
             {
                 boosting = false;
-                multiplier = (1/Constants.TURBO_BOOST_MULTIPLIER);
+                multiplier = (1/TurboBoost.SPEED_MULTIPLIER);
                 Debug.Log("Turbo ended!");
             }
             else // Boost is active
             {
-                multiplier = Constants.TURBO_BOOST_MULTIPLIER;
+                multiplier = TurboBoost.SPEED_MULTIPLIER;
             }
         }
         return multiplier;
@@ -182,7 +182,7 @@ public class pigController : MonoBehaviour
 
     private void UpdateSounds(float speed)
     {
-        if (speed > Constants.MOVE_DETECTION_THRESHOLD && isGrounded)
+        if (speed > Movement.DETECTION_THRESHOLD && isGrounded)
         {
             stepTimer += Time.deltaTime;
             if (stepTimer >= stepInterval)
@@ -194,27 +194,16 @@ public class pigController : MonoBehaviour
         else { stepTimer = stepInterval; }
     }
 
-    // FIXME: Scale and mass changes at different rates
     private void CardioEffect(float distanceTravelled)
     {
-        float newMass = rb.mass - (Constants.DISTANCE_MASS_DECREASE * distanceTravelled);
-        Vector3 newScale = transform.localScale - new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
-        if (newMass > Constants.MIN_MASS)
+        if (distanceTravelled < Movement.DETECTION_THRESHOLD) return;
+        float newMass = rb.mass - (PigMass.DISTANCE_DECREASE * distanceTravelled);
+        float newScaleComponent = PigScale.DISTANCE_DECREASE * distanceTravelled;
+        Vector3 newScale = transform.localScale - new Vector3(newScaleComponent, newScaleComponent, newScaleComponent);
+        rb.mass = Mathf.Clamp(newMass, PigMass.MIN, PigMass.MAX);
+        if (newScale.magnitude >= minScaleMagnitude)
         {
-            rb.mass = newMass;
-        }
-        else if (rb.mass > Constants.MIN_MASS)
-        {
-            transform.localScale = originalScale;
-            rb.mass = Constants.MIN_MASS;
-        }
-        if (newScale.magnitude > originalScale.magnitude)
-        {
-            transform.localScale -= new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
-        }
-        else if (transform.localScale.magnitude > originalScale.magnitude)
-        {
-            transform.localScale = originalScale;
+            transform.localScale = newScale;        
         }
     }
 
@@ -226,16 +215,7 @@ public class pigController : MonoBehaviour
         }
         else if (other.CompareTag("Slop"))
         {
-            transform.localScale += new Vector3(Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE, Constants.SLOP_SCALE_INCREASE);
-            float newMass = rb.mass + Constants.SLOP_MASS_INCREASE;
-            if (newMass < Constants.MAX_MASS)
-            {
-                rb.mass += Constants.SLOP_MASS_INCREASE;
-            }
-            else if (rb.mass < Constants.MAX_MASS)
-            {
-                rb.mass = Constants.MAX_MASS;
-            }
+            EatSlop(1);
             animator.SetTrigger("Eat");
         }
     }
@@ -247,18 +227,18 @@ public class pigController : MonoBehaviour
 
         if (terrainIndex == groundSoilIndex)
         {
-            rb.linearDamping = normalDrag;  // Normal drag
-            multiplier = 1f; // Normal speed
+            rb.linearDamping = TerrainFriction.DEFAULT_DRAG;  // Normal drag
+            multiplier = TerrainFriction.DEFAULT_SPEED_MULTIPLIER; // Normal speed
         }
         else if (terrainIndex == iceIndex)
         {
-            rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            multiplier = 1.2f; // Slight speed boost
+            rb.linearDamping = TerrainFriction.ICE_DRAG;  // Reduce drag = more slippery
+            multiplier = TerrainFriction.ICE_SPEED_MULTIPLIER; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
-            rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            multiplier = 0.8f; // Reduce speed
+            rb.linearDamping = TerrainFriction.MUD_DRAG;  // Increase drag = harder to move
+            multiplier = TerrainFriction.MUD_SPEED_MULTIPLIER; // Reduce speed
         }
         return multiplier;
     }
@@ -293,6 +273,15 @@ public class pigController : MonoBehaviour
         }
 
         return maxIndex;
+    }
+
+    private void EatSlop(int factor)
+    {
+        if (rb.mass < PigMass.MAX - factor * PigMass.SLOP_INCREASE)
+        {
+            rb.mass += factor * PigMass.SLOP_INCREASE;
+            transform.localScale += new Vector3(factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE);
+        }
     }
 
 }
