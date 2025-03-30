@@ -32,9 +32,6 @@ public class pigController : MonoBehaviour
     private bool boosting = false;   // This is for knowing to reset the speed
 
     [Header("Friction Settings")]
-    public float normalDrag = 1f;
-    public float iceDrag = 0.2f;
-    public float mudDrag = 5f;
 
     // relates to the ground layer levels
     [Header("Terrain Layer Mapping")]
@@ -228,18 +225,18 @@ public class pigController : MonoBehaviour
 
         if (terrainIndex == groundSoilIndex)
         {
-            rb.linearDamping = normalDrag;  // Normal drag
-            multiplier = 1f; // Normal speed
+            rb.linearDamping = TerrainFriction.DEFAULT_DRAG;  // Normal drag
+            multiplier = TerrainFriction.DEFAULT_SPEED_MULTIPLIER; // Normal speed
         }
         else if (terrainIndex == iceIndex)
         {
-            rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            multiplier = 1.2f; // Slight speed boost
+            rb.linearDamping = TerrainFriction.ICE_DRAG;  // Reduce drag = more slippery
+            multiplier = TerrainFriction.ICE_SPEED_MULTIPLIER; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
-            rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            multiplier = 0.8f; // Reduce speed
+            rb.linearDamping = TerrainFriction.MUD_DRAG;  // Increase drag = harder to move
+            multiplier = TerrainFriction.MUD_SPEED_MULTIPLIER; // Reduce speed
         }
         return multiplier;
     }

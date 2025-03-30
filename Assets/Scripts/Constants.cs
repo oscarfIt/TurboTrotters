@@ -29,3 +29,13 @@ public struct PigScale
     public const float SLOP_INCREASE = 0.2f;
     public const float DISTANCE_DECREASE = 0.01f;
 }
+
+public struct TerrainFriction
+{
+    public float const DEFAULT_DRAG = 1f;
+    public float const ICE_DRAG = 0.2f;
+    public float const MUD_DRAG = 5f;
+    public float const DEFAULT_SPEED_MULTIPLIER = 1f;
+    public float const ICE_SPEED_MULTIPLIER = 1.2f;
+    public float const MUD_SPEED_MULTIPLIER = 0.8f;
+}
