@@ -25,7 +25,7 @@ public class pigController : MonoBehaviour
     private Animator animator;
     private bool isGrounded;
     private Vector3 previousPosition;
-    private Vector3 baseScale;
+    private float minScaleMagnitude;
     private double turboEndTime;
     private bool jumped = false;
     private bool boosted = false;   // This is triggered by input
@@ -53,13 +53,15 @@ public class pigController : MonoBehaviour
     public AudioClip footstepSound;
     public float stepInterval = 0.3f;
     private float stepTimer;
+
     void Start()
     {
         // HUDManager.Instance.UpdateHUDPosition(1, 2);
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pigControls = GetComponent<PlayerInput>();
-        baseScale = transform.localScale;
+        transform.localScale = new Vector3(Constants.MIN_SCALE, Constants.MIN_SCALE, Constants.MIN_SCALE);
+        minScaleMagnitude = transform.localScale.magnitude;
         previousPosition = transform.position;
         currentSpeed = baseSpeed;
         rb.mass = Constants.MIN_MASS;
@@ -94,7 +96,6 @@ public class pigController : MonoBehaviour
         UpdateMoveAnimations(speed);
         UpdateSounds(speed);
         UpdateJump();
-
     }
 
     void FixedUpdate()
@@ -197,24 +198,14 @@ public class pigController : MonoBehaviour
     // FIXME: Scale and mass changes at different rates
     private void CardioEffect(float distanceTravelled)
     {
+        if (distanceTravelled < Constants.MOVE_DETECTION_THRESHOLD) return;
         float newMass = rb.mass - (Constants.DISTANCE_MASS_DECREASE * distanceTravelled);
-        Vector3 newScale = transform.localScale - new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
-        if (newMass > Constants.MIN_MASS)
+        float newScaleComponent = Constants.DISTANCE_SCALE_DECREASE * distanceTravelled;
+        Vector3 newScale = transform.localScale - new Vector3(newScaleComponent, newScaleComponent, newScaleComponent);
+        rb.mass = Mathf.Clamp(newMass, Constants.MIN_MASS, Constants.MAX_MASS);
+        if (newScale.magnitude >= minScaleMagnitude)
         {
-            rb.mass = newMass;
-        }
-        else if (rb.mass > Constants.MIN_MASS)
-        {
-            transform.localScale = baseScale;
-            rb.mass = Constants.MIN_MASS;
-        }
-        if (newScale.magnitude > baseScale.magnitude)
-        {
-            transform.localScale -= new Vector3(Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE, Constants.DISTANCE_SCALE_DECREASE);
-        }
-        else if (transform.localScale.magnitude > baseScale.magnitude)
-        {
-            transform.localScale = baseScale;
+            transform.localScale = newScale;        
         }
     }
 
