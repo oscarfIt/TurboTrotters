@@ -96,8 +96,10 @@ public class pigController : MonoBehaviour
 
         // Update Animator
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
-        animator.SetFloat("Speed", speed);
-        animator.SetBool("IsGrounded", isGrounded);
+
+        UpdateMoveAnimations(speed);
+        UpdateSounds(speed);
+
         if (boosted && isGrounded && turboPoints.usePoint())
         {
             boosting = true;
@@ -111,19 +113,6 @@ public class pigController : MonoBehaviour
             if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
             Debug.Log("Jumped!");
         }
-        bool isMoving = new Vector2(inputDirection.x, inputDirection.y).magnitude > 0.1f;
-        if (isMoving && isGrounded)
-        {
-            stepTimer += Time.deltaTime;
-            if (stepTimer >= stepInterval)
-            {
-                if (footstepSound != null && audioSource != null) { audioSource.PlayOneShot(footstepSound); }
-                stepTimer = 0f;
-            }
-
-
-        }
-        else { stepTimer = stepInterval; }
     }
 
     void FixedUpdate()
@@ -165,7 +154,26 @@ public class pigController : MonoBehaviour
         }
     }
 
-    // FIXME: Scale and mass changes at different rates
+    private void UpdateMoveAnimations(float speed)
+    {
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("IsGrounded", isGrounded);
+    }
+
+    private void UpdateSounds(float speed)
+    {
+        if (speed > Constants.MOVE_DETECTION_THRESHOLD && isGrounded)
+        {
+            stepTimer += Time.deltaTime;
+            if (stepTimer >= stepInterval)
+            {
+                if (footstepSound != null && audioSource != null) { audioSource.PlayOneShot(footstepSound); }
+                stepTimer = 0f;
+            }
+        }
+        else { stepTimer = stepInterval; }
+    }
+
     // FIXME: Scale and mass changes at different rates
     private void CardioEffect(float distanceTravelled)
     {
