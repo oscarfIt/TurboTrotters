@@ -90,6 +90,7 @@ public class pigController : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
 
+        UpdateFriction();
         UpdateMoveAnimations(speed);
         UpdateSounds(speed);
         UpdateJump();
@@ -115,7 +116,7 @@ public class pigController : MonoBehaviour
 
             // Preserve Y velocity (gravity) while setting X/Z
             Vector3 currentVelocity = rb.linearVelocity;
-            Vector3 targetVelocity = moveDirection * ApplyFriction();
+            Vector3 targetVelocity = moveDirection * currentSpeed;
             rb.linearVelocity = new Vector3(targetVelocity.x, currentVelocity.y, targetVelocity.z);
         }
         else
@@ -224,32 +225,21 @@ public class pigController : MonoBehaviour
         }
     }
 
-    private float ApplyFriction()
+    private void UpdateFriction()
     {
         int terrainIndex = GetTerrainTextureIndex();
-        float terrainSpeed;
 
-        if (terrainIndex == groundSoilIndex)
-        {
-            rb.linearDamping = normalDrag;
-            terrainSpeed = currentSpeed;
-        }
-        else if (terrainIndex == iceIndex)
+        if (terrainIndex == iceIndex)
         {
             rb.linearDamping = iceDrag;  // Reduce drag = more slippery
-            terrainSpeed = currentSpeed * 1.2f; // Slight speed boost
+            currentSpeed *= 1.2f; // Slight speed boost
         }
         else if (terrainIndex == mudIndex)
         {
             rb.linearDamping = mudDrag;  // Increase drag = harder to move
-            terrainSpeed = currentSpeed * 0.8f; // Reduce speed
+            currentSpeed += 0.8f; // Reduce speed
         }
-        else
-        {
-            rb.linearDamping = normalDrag;
-            terrainSpeed = currentSpeed;
-        }
-        return terrainSpeed;
+        // else if (terrainIndex == groundSoilIndex) do nothing
     }
 
     int GetTerrainTextureIndex()
