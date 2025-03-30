@@ -12,7 +12,6 @@ public class pigController : MonoBehaviour
     [Header("Movement Settings")]
 
     // Constants
-    public float baseSpeed = 5f;
     public float turnSpeed = 200f;
     public float jumpForce = 600f;
     public float groundDistance = 0.3f;
@@ -43,6 +42,8 @@ public class pigController : MonoBehaviour
     public int groundSoilIndex = 1; // Adjust based on your terrain layer order
     public int iceIndex = 2;
     public int mudIndex = 4;
+    private float baseSpeed = 5f;
+
 
     private float inputHorizontal;
     private float inputVertical;
