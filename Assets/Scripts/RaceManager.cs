@@ -52,7 +52,7 @@ public class RaceManager : MonoBehaviour
         while (elapsedTime < Movement.KICK_DURATION)
         {
             targetPos = currentLeader.transform.position; // Maybe check for null here
-            targetPos.x -= Movement.KICKED_POSITION_OFFSET;
+            targetPos += GetKickedOffset();
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / Movement.KICK_DURATION; // Normalize time (0 to 1)
 
@@ -73,6 +73,47 @@ public class RaceManager : MonoBehaviour
     public void SetCurrentTrackSection(string newSection)
     {
         currentTrackSection = newSection;
+    }
+
+    // Deja vu
+    private Vector3 GetKickedOffset()
+    {
+        Vector3 offsetVetor = Vector3.zero;
+        switch (currentTrackSection)
+        {
+            case TrackSection.SouthStraight:
+                offsetVetor.x -= Movement.KICKED_POSITION_OFFSET;
+                break;
+            case TrackSection.EastStraight:
+                offsetVetor.z -= Movement.KICKED_POSITION_OFFSET;
+                break;
+            case TrackSection.NorthStraight:
+                offsetVetor.x += Movement.KICKED_POSITION_OFFSET;
+                break;
+            case TrackSection.WestStraight:
+                offsetVetor.z += Movement.KICKED_POSITION_OFFSET;
+                break;
+            case TrackSection.SecantNorthEast:
+                offsetVetor.x -= Movement.KICKED_POSITION_OFFSET;
+                offsetVetor.z -= Movement.KICKED_POSITION_OFFSET;
+                break;
+            case TrackSection.SecantNorthWest:
+                offsetVetor.x += Movement.KICKED_POSITION_OFFSET;
+                offsetVetor.z -= Movement.KICKED_POSITION_OFFSET;
+                break;
+            case TrackSection.SecantSouthEast:
+                offsetVetor.x -= Movement.KICKED_POSITION_OFFSET;
+                offsetVetor.z += Movement.KICKED_POSITION_OFFSET;
+                break;
+            case TrackSection.SecantSouthWest:
+                offsetVetor.x += Movement.KICKED_POSITION_OFFSET;
+                offsetVetor.z += Movement.KICKED_POSITION_OFFSET;
+                break;
+            default:
+                Debug.LogWarning("Unknown track section, no offset vector applied.");
+                break;
+        }
+        return offsetVetor;
     }
 
 }
