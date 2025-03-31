@@ -64,7 +64,7 @@ public class LeaderTracker : MonoBehaviour
         raceManager.SetLeader(currentLeader);
 
         // Reset the object's position relative to the new player
-        transform.localPosition = Vector3.zero; // You can modify this to have an offset if needed
+        transform.localPosition = Vector3.zero;
     }
 
 
@@ -85,7 +85,7 @@ public class LeaderTracker : MonoBehaviour
             case TrackSection.WestStraight:
                 incrementVector.z -= incrementAmount;
                 break;
-            case TrackSection.SecantNorthEast:   // Hard coded for a NorthEast secant for now
+            case TrackSection.SecantNorthEast:
                 incrementVector.x += incrementAmount;
                 incrementVector.z += incrementAmount;
                 break;

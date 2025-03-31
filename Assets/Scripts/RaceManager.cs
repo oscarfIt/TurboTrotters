@@ -54,20 +54,18 @@ public class RaceManager : MonoBehaviour
             targetPos = currentLeader.transform.position; // Maybe check for null here
             targetPos += GetKickedOffset();
             elapsedTime += Time.deltaTime;
-            float t = elapsedTime / Movement.KICK_DURATION; // Normalize time (0 to 1)
+            float t = elapsedTime / Movement.KICK_DURATION;
 
-            // Lerp for horizontal movement
             Vector3 newPos = Vector3.Lerp(startPos, targetPos, t);
 
-            // Add arc effect (up and then down)
             newPos.y += Mathf.Sin(t * Mathf.PI) * Movement.KICKED_HEIGHT;
 
             pigToKick.transform.position = newPos;
 
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
-        pigToKick.transform.position = targetPos; // Ensure exact landing
+        pigToKick.transform.position = targetPos;
     }
 
     public void SetCurrentTrackSection(string newSection)
