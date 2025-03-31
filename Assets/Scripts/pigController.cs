@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class pigController : MonoBehaviour
 {
-
+    public Camera mainCamera;
+    public RaceManager raceManager;
     public PlayerInput pigControls;
     public TurboPoints turboPoints;
 
@@ -30,6 +31,7 @@ public class pigController : MonoBehaviour
     private bool jumped = false;
     private bool boosted = false;   // This is triggered by input
     private bool boosting = false;   // This is for knowing to reset the speed
+    private bool beingKicked = false;   // This should probably disable some stuff
 
     [Header("Friction Settings")]
 
@@ -57,6 +59,9 @@ public class pigController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         pigControls = GetComponent<PlayerInput>();
+        mainCamera = Camera.main;
+        if (raceManager == null)
+            raceManager = GameObject.FindGameObjectsWithTag("RaceManager")[0].GetComponent<RaceManager>();
         transform.localScale = new Vector3(PigScale.MIN, PigScale.MIN, PigScale.MIN);
         minScaleMagnitude = transform.localScale.magnitude;
         previousPosition = transform.position;
@@ -89,6 +94,8 @@ public class pigController : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         float speed = new Vector2(inputDirection.x, inputDirection.y).magnitude;
 
+        if (isGrounded)
+            beingKicked = false;
         UpdateSpeed();
         UpdateMoveAnimations(speed);
         UpdateSounds(speed);
@@ -98,6 +105,11 @@ public class pigController : MonoBehaviour
     void FixedUpdate()
     {
         moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
+
+        if (!IsInView() && !beingKicked)
+        {
+            StartCoroutine(raceManager.KickPig(gameObject));
+        }
 
         // Apply extra downward force if in the air (if it's not moving upwards)
         if (!isGrounded && rb.linearVelocity.y <= 0)
@@ -281,6 +293,14 @@ public class pigController : MonoBehaviour
             rb.mass += factor * PigMass.SLOP_INCREASE;
             transform.localScale += new Vector3(factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE);
         }
+    }
+
+    // For checking if a pig falls too far behind
+    // KICK IT BACK!
+    private bool IsInView()
+    {
+        Vector3 viewportPosition = mainCamera.WorldToViewportPoint(transform.position);
+        return viewportPosition.x > 0f && viewportPosition.z > 0f;
     }
 
 }

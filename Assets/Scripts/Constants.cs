@@ -2,6 +2,9 @@ struct Movement
 {
     public const float DETECTION_THRESHOLD = 0.1f;
     public const float SPEED_NUMERATOR = 100f;
+    public const float KICKED_POSITION_OFFSET = 3f;
+    public const float KICK_DURATION = 1f;
+    public const float KICKED_HEIGHT = 2f;
 }
 
 

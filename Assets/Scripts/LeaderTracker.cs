@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class LeaderTracker : MonoBehaviour
 {
+    public RaceManager raceManager;
     public GameObject currentLeader;
     public GameObject centreObject; // Set this in the editor
     public Vector3 trackCentre;
-    private string currentTrackSection;
     void Start()
     {
         if (centreObject == null)
             trackCentre = new Vector3(250, 25, 150); // This default is for Map1
         else
             trackCentre = centreObject.transform.position;
-        currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
+        if (raceManager == null)
+            raceManager = GameObject.FindGameObjectsWithTag("RaceManager")[0].GetComponent<RaceManager>();  // Gross
     }
 
     void Update()
@@ -38,7 +39,7 @@ public class LeaderTracker : MonoBehaviour
                  other.gameObject.CompareTag(TrackSection.SecantSouthWest))
         {
             Debug.Log($"Plane {gameObject.name} entered track section: {other.gameObject.tag}");
-            currentTrackSection = other.gameObject.tag;
+            raceManager.SetCurrentTrackSection(other.gameObject.tag);
         }
     }
 
@@ -49,7 +50,7 @@ public class LeaderTracker : MonoBehaviour
             Debug.Log($"Detaching from current leader: {currentLeader.name}");
             // Move the plane a small distance away from the current leader to avoid immediate collision
             // This will naturally be in the direction of the new leader
-            Vector3 incrementVector = GetIncrementVector(transform.position, newLeader.transform.position);
+            Vector3 incrementVector = GetIncrementVector(1f);
             // Detach from the current leader
             currentLeader = null;
             transform.SetParent(null);
@@ -60,44 +61,45 @@ public class LeaderTracker : MonoBehaviour
 
         currentLeader = newLeader;
         transform.SetParent(currentLeader.transform);
+        raceManager.SetLeader(currentLeader);
 
         // Reset the object's position relative to the new player
-        transform.localPosition = Vector3.zero; // You can modify this to have an offset if needed
+        transform.localPosition = Vector3.zero;
     }
 
 
-    private Vector3 GetIncrementVector(Vector3 planePosition, Vector3 incomingPlayerPosition)
+    public Vector3 GetIncrementVector(float incrementAmount)
     {
         Vector3 incrementVector = Vector3.zero;
-        switch (currentTrackSection)
+        switch (raceManager.currentTrackSection)
         {
             case TrackSection.SouthStraight:
-                incrementVector.x += 1f;
+                incrementVector.x += incrementAmount;
                 break;
             case TrackSection.EastStraight:
-                incrementVector.z += 1f;
+                incrementVector.z += incrementAmount;
                 break;
             case TrackSection.NorthStraight:
-                incrementVector.x -= 1f;
+                incrementVector.x -= incrementAmount;
                 break;
             case TrackSection.WestStraight:
-                incrementVector.z -= 1f;
+                incrementVector.z -= incrementAmount;
                 break;
-            case TrackSection.SecantNorthEast:   // Hard coded for a NorthEast secant for now
-                incrementVector.x += 1f;
-                incrementVector.z += 1f;
+            case TrackSection.SecantNorthEast:
+                incrementVector.x += incrementAmount;
+                incrementVector.z += incrementAmount;
                 break;
             case TrackSection.SecantNorthWest:
-                incrementVector.x -= 1f;
-                incrementVector.z += 1f;
+                incrementVector.x -= incrementAmount;
+                incrementVector.z += incrementAmount;
                 break;
             case TrackSection.SecantSouthEast:
-                incrementVector.x += 1f;
-                incrementVector.z -= 1f;
+                incrementVector.x += incrementAmount;
+                incrementVector.z -= incrementAmount;
                 break;
             case TrackSection.SecantSouthWest:
-                incrementVector.x -= 1f;
-                incrementVector.z -= 1f;
+                incrementVector.x -= incrementAmount;
+                incrementVector.z -= incrementAmount;
                 break;
             default:
                 Debug.LogWarning("Unknown track section, no increment vector applied.");
@@ -108,7 +110,7 @@ public class LeaderTracker : MonoBehaviour
 
     private void UpdatePlaneOrientation()
     {
-        switch (currentTrackSection)
+        switch (raceManager.currentTrackSection)
         {
             case TrackSection.SouthStraight:
                 transform.rotation = Quaternion.Euler(0, 0, -90);
