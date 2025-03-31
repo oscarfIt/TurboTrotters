@@ -16,7 +16,7 @@ public class LeaderTracker : MonoBehaviour
         if (currentLeader == null) return;
         UpdatePlaneOrientation();
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -30,7 +30,10 @@ public class LeaderTracker : MonoBehaviour
                  other.gameObject.CompareTag(TrackSection.EastStraight) ||
                  other.gameObject.CompareTag(TrackSection.NorthStraight) ||
                  other.gameObject.CompareTag(TrackSection.WestStraight) ||
-                 other.gameObject.CompareTag(TrackSection.Secant))
+                 other.gameObject.CompareTag(TrackSection.SecantNorthEast) ||
+                 other.gameObject.CompareTag(TrackSection.SecantNorthWest) ||
+                 other.gameObject.CompareTag(TrackSection.SecantSouthEast) ||
+                 other.gameObject.CompareTag(TrackSection.SecantSouthWest))
         {
             Debug.Log($"Plane {gameObject.name} entered track section: {other.gameObject.tag}");
             currentTrackSection = other.gameObject.tag;
@@ -78,9 +81,21 @@ public class LeaderTracker : MonoBehaviour
             case TrackSection.WestStraight:
                 incrementVector.z -= 1f;
                 break;
-            case TrackSection.Secant:   // Hard coded for a NorthEast secant for now
+            case TrackSection.SecantNorthEast:   // Hard coded for a NorthEast secant for now
                 incrementVector.x += 1f;
                 incrementVector.z += 1f;
+                break;
+            case TrackSection.SecantNorthWest:
+                incrementVector.x -= 1f;
+                incrementVector.z += 1f;
+                break;
+            case TrackSection.SecantSouthEast:
+                incrementVector.x += 1f;
+                incrementVector.z -= 1f;
+                break;
+            case TrackSection.SecantSouthWest:
+                incrementVector.x -= 1f;
+                incrementVector.z -= 1f;
                 break;
             default:
                 Debug.LogWarning("Unknown track section, no increment vector applied.");
@@ -105,7 +120,10 @@ public class LeaderTracker : MonoBehaviour
             case TrackSection.WestStraight:
                 transform.rotation = Quaternion.Euler(0, -270, -90);
                 break;
-            case TrackSection.Secant:
+            case TrackSection.SecantNorthEast:
+            case TrackSection.SecantNorthWest:
+            case TrackSection.SecantSouthEast:
+            case TrackSection.SecantSouthWest:
                 Vector3 toCenter = (trackCentre - transform.position).normalized;
                 // Normal vector to the plane
                 Vector3 normal = Vector3.Cross(toCenter, Vector3.up).normalized;
