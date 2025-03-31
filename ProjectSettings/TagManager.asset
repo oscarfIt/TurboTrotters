@@ -8,6 +8,14 @@ TagManager:
   - Slop
   - LeaderTracker
   - TrackCentre
+  - NorthStraightSection
+  - SouthStraightSection
+  - EastStraightSection
+  - WestStraightSection
+  - SecantNorthEastSection
+  - SecantNorthWestSection
+  - SecantSouthWestSection
+  - SecantSouthEastSection
   layers:
   - Default
   - TransparentFX
