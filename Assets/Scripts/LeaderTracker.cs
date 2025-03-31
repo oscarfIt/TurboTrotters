@@ -66,8 +66,10 @@ public class LeaderTracker : MonoBehaviour
     }
 
 
-    private Vector3 GetIncrementVector(float incrementAmount)
+    public Vector3 GetIncrementVector(float incrementAmount, bool decrement = false)
     {
+        if (decrement)
+            incrementAmount *= -1;
         Vector3 incrementVector = Vector3.zero;
         switch (currentTrackSection)
         {
