@@ -68,10 +68,8 @@ public class LeaderTracker : MonoBehaviour
     }
 
 
-    public Vector3 GetIncrementVector(float incrementAmount, bool decrement = false)
+    public Vector3 GetIncrementVector(float incrementAmount)
     {
-        if (decrement)
-            incrementAmount *= -1;
         Vector3 incrementVector = Vector3.zero;
         switch (raceManager.currentTrackSection)
         {
