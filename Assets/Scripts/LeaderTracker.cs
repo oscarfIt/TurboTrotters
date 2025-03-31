@@ -14,13 +14,9 @@ public class LeaderTracker : MonoBehaviour
     void Update()
     {
         if (currentLeader == null) return;
-
-        Vector3 toCenter = (trackCentre - transform.position).normalized;
-        // Normal vector to the plane
-        Vector3 normal = Vector3.Cross(toCenter, Vector3.up).normalized;
-        transform.rotation = Quaternion.LookRotation(toCenter, normal);
+        UpdatePlaneOrientation();
     }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -45,7 +41,16 @@ public class LeaderTracker : MonoBehaviour
     {
         if (currentLeader != null)
         {
+            Debug.Log($"Detaching from current leader: {currentLeader.name}");
+            // Move the plane a small distance away from the current leader to avoid immediate collision
+            // This will naturally be in the direction of the new leader
+            Vector3 incrementVector = GetIncrementVector(transform.position, newLeader.transform.position);
+            // Detach from the current leader
+            currentLeader = null;
             transform.SetParent(null);
+            transform.position += incrementVector;
+            // Return and wait for the next trigger
+            return;
         }
 
         currentLeader = newLeader;
@@ -54,6 +59,36 @@ public class LeaderTracker : MonoBehaviour
         // Reset the object's position relative to the new player
         transform.localPosition = Vector3.zero; // You can modify this to have an offset if needed
     }
+
+
+    private Vector3 GetIncrementVector(Vector3 planePosition, Vector3 incomingPlayerPosition)
+    {
+        Vector3 incrementVector = Vector3.zero;
+        switch (currentTrackSection)
+        {
+            case TrackSection.SouthStraight:
+                incrementVector.x += 1f;
+                break;
+            case TrackSection.EastStraight:
+                incrementVector.z += 1f;
+                break;
+            case TrackSection.NorthStraight:
+                incrementVector.x -= 1f;
+                break;
+            case TrackSection.WestStraight:
+                incrementVector.z -= 1f;
+                break;
+            case TrackSection.Secant:   // Hard coded for a NorthEast secant for now
+                incrementVector.x += 1f;
+                incrementVector.z += 1f;
+                break;
+            default:
+                Debug.LogWarning("Unknown track section, no increment vector applied.");
+                break;
+        }
+        return incrementVector;
+    }
+
     private void UpdatePlaneOrientation()
     {
         switch (currentTrackSection)
