@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class RaceManager : MonoBehaviour
 {
     private List<GameObject> players;
-    private GameObject currentLeader;
+    private GameObject currentLeader;   // Oh the duplication
 
     public string currentTrackSection;  // Used pretty often in LeaderTracker.cs
 
