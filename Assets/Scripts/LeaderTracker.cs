@@ -6,7 +6,6 @@ public class LeaderTracker : MonoBehaviour
     public GameObject currentLeader;
     public GameObject centreObject; // Set this in the editor
     public Vector3 trackCentre;
-    private string currentTrackSection;
     void Start()
     {
         if (centreObject == null)
@@ -15,7 +14,6 @@ public class LeaderTracker : MonoBehaviour
             trackCentre = centreObject.transform.position;
         if (raceManager == null)
             raceManager = GameObject.FindGameObjectsWithTag("RaceManager")[0].GetComponent<RaceManager>();  // Gross
-        currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
     }
 
     void Update()
@@ -41,7 +39,7 @@ public class LeaderTracker : MonoBehaviour
                  other.gameObject.CompareTag(TrackSection.SecantSouthWest))
         {
             Debug.Log($"Plane {gameObject.name} entered track section: {other.gameObject.tag}");
-            currentTrackSection = other.gameObject.tag;
+            raceManager.SetCurrentTrackSection(other.gameObject.tag);
         }
     }
 
@@ -75,7 +73,7 @@ public class LeaderTracker : MonoBehaviour
         if (decrement)
             incrementAmount *= -1;
         Vector3 incrementVector = Vector3.zero;
-        switch (currentTrackSection)
+        switch (raceManager.currentTrackSection)
         {
             case TrackSection.SouthStraight:
                 incrementVector.x += incrementAmount;
@@ -114,7 +112,7 @@ public class LeaderTracker : MonoBehaviour
 
     private void UpdatePlaneOrientation()
     {
-        switch (currentTrackSection)
+        switch (raceManager.currentTrackSection)
         {
             case TrackSection.SouthStraight:
                 transform.rotation = Quaternion.Euler(0, 0, -90);

@@ -7,9 +7,13 @@ public class RaceManager : MonoBehaviour
     private List<GameObject> players;
     private GameObject currentLeader;
 
+    public string currentTrackSection;  // Used pretty often in LeaderTracker.cs
+
+
     void Start()
     {
         players = new List<GameObject>();
+        currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
     }
 
     void Update()
@@ -64,6 +68,11 @@ public class RaceManager : MonoBehaviour
         }
 
         pigToKick.transform.position = targetPos; // Ensure exact landing
+    }
+
+    public void SetCurrentTrackSection(string newSection)
+    {
+        currentTrackSection = newSection;
     }
 
 }
