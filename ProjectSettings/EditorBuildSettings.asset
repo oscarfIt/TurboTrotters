@@ -10,8 +10,11 @@ EditorBuildSettings:
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/scenes/MainMenu.unity
-    guid: a57de373c2589784f805c8f08ef2f484
+    guid: c767d22ceecee144b9f68b1167aa44d0
   - enabled: 1
+    path: Assets/scenes/SelectionLobby.unity
+    guid: 3e9c6cb836b768745a3d6973884df1f4
+  - enabled: 0
     path: Assets/scenes/CharacterSelection.unity
     guid: 57e68a657514c0844881057c480fe1f3
   - enabled: 1
@@ -27,5 +30,6 @@ EditorBuildSettings:
     path: Assets/scenes/PauseMenu.unity
     guid: 3f1ece346b9fbda489875175e9f905f5
   m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 7d576114ae3e67d4a96a3fd225d7f1d8, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 1c139567496a5354f8ea9c70044a8dbc, type: 3}
   m_UseUCBPForAssetBundles: 0

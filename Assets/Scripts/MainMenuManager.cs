@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour
 {
     public GameObject mainMenuPanel;
@@ -9,9 +10,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnPlayButton()
     {
-        mainMenuPanel.SetActive(false);
-      //  mapSelectPanel.SetActive(true);
-        // Additional logic for initializing player joining can be placed here.
+        SceneManager.LoadScene("SelectionLobby");
     }
 
     // Called when the Options button is pressed
