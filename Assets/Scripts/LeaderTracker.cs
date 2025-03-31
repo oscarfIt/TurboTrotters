@@ -21,9 +21,7 @@ public class LeaderTracker : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Vector3 directionToPlayer = (other.transform.position - transform.position);
             Debug.Log($"Player {other.gameObject.name} entered trigger");
-            Debug.Log($"Direction to player: {directionToPlayer}");
             SetNewLeader(other.gameObject);
         }
         else if (other.gameObject.CompareTag(TrackSection.SouthStraight) ||
