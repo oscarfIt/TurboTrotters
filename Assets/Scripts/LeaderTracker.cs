@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class LeaderTracker : MonoBehaviour
 {
+    public RaceManager raceManager;
     public GameObject currentLeader;
     public GameObject centreObject; // Set this in the editor
     public Vector3 trackCentre;
@@ -12,6 +13,8 @@ public class LeaderTracker : MonoBehaviour
             trackCentre = new Vector3(250, 25, 150); // This default is for Map1
         else
             trackCentre = centreObject.transform.position;
+        if (raceManager == null)
+            raceManager = GameObject.FindGameObjectsWithTag("RaceManager")[0].GetComponent<RaceManager>();  // Gross
         currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
     }
 
@@ -60,6 +63,7 @@ public class LeaderTracker : MonoBehaviour
 
         currentLeader = newLeader;
         transform.SetParent(currentLeader.transform);
+        raceManager.SetLeader(currentLeader);
 
         // Reset the object's position relative to the new player
         transform.localPosition = Vector3.zero; // You can modify this to have an offset if needed
