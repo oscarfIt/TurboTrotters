@@ -15,6 +15,6 @@ public class RaceManager : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput player)
     {
-        player.gameObject.name = "Player_" + player.playerIndex;
+        player.gameObject.name = "Player_" + player.playerIndex.ToString();
     }
 }
