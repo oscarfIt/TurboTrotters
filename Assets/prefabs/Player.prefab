@@ -194,7 +194,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pigControls: {fileID: 0}
-  moveSpeed: 5
   turnSpeed: 200
   jumpForce: 6
   groundDistance: 0.3
@@ -203,9 +202,6 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  normalDrag: 1
-  iceDrag: 0.2
-  mudDrag: 5
   groundSoilIndex: 1
   iceIndex: 2
   mudIndex: 4
