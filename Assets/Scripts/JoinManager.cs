@@ -31,7 +31,7 @@ public class JoinManager : MonoBehaviour
     private void Awake()
     {
         joinPanel.SetActive(true);
-        
+
         mapSelectPanel.SetActive(false);
         if (instance == null)
         {
@@ -48,28 +48,32 @@ public class JoinManager : MonoBehaviour
     {
         if (!allowJoining) { return; }
         //  player.transform.parent = playerListContainer;
-        if (joinPanel.activeInHierarchy==true) { 
-        if (!joinedPlayers.Contains(player))
-         {
-            player.transform.SetParent(playerListContainer);
-            joinedPlayers.Add(player);
-             Debug.Log("Player joined. Total players: " + joinedPlayers.Count);
+        if (joinPanel.activeInHierarchy == true)
+        {
+            if (!joinedPlayers.Contains(player))
+            {
+                player.transform.SetParent(playerListContainer);
+                joinedPlayers.Add(player);
+                Debug.Log("Player joined. Total players: " + joinedPlayers.Count);
 
-        }
+            }
         }
 
     }
 
     public void OnPlayerJoined(PlayerInput input) { }//needed to prevent runtime err- does nothing
 
-    public void OnPlayerReadyStateChanged(LobbyPlayer player) {
-        if (allPlayersReady()) { 
+    public void OnPlayerReadyStateChanged(LobbyPlayer player)
+    {
+        if (allPlayersReady())
+        {
             ProceedToMapSelection();
         }
     }
 
 
-    private bool allPlayersReady() {
+    private bool allPlayersReady()
+    {
         if (joinedPlayers.Count == 0)
             return false;
         foreach (LobbyPlayer player in joinedPlayers)
@@ -82,16 +86,16 @@ public class JoinManager : MonoBehaviour
     public void ProceedToMapSelection()
     {
         // Hide the join panel and show the map selection panel.
- 
+
         allowJoining = false;
         HideJoinPanel();
-  
+
         mapSelectPanel.SetActive(true);
         Debug.Log("All players ready, Proceeding to map selection");
 
         foreach (LobbyPlayer player in joinedPlayers)
         {
-   
+
             PlayerInput input = player.GetComponent<PlayerInput>();
             if (input != null)
             {
@@ -99,7 +103,7 @@ public class JoinManager : MonoBehaviour
             }
         }
 
-      EventSystem.current.SetSelectedGameObject(map1Btn);
+        EventSystem.current.SetSelectedGameObject(map1Btn);
     }
 
     public void SelectMap(string mapName)
@@ -114,9 +118,11 @@ public class JoinManager : MonoBehaviour
         // Optionally, pass the player data to a Game Manager.
         // Then load the selected map scene.
         playerDataList.Clear();
-        foreach (LobbyPlayer lobbyplayer in joinedPlayers) { 
+        foreach (LobbyPlayer lobbyplayer in joinedPlayers)
+        {
             PlayerInput input = lobbyplayer.GetComponent<PlayerInput>();
-            if (input != null) {
+            if (input != null)
+            {
                 var data = new PlayerData
                 {
                     inputDevice = input.devices[0],
@@ -135,6 +141,11 @@ public class JoinManager : MonoBehaviour
     public void OnMap1Button()
     {
         SelectMap("Map_1");
+    }
+
+    public void OnMapTutorialButton()
+    {
+        SelectMap("Map_Tutorial");
     }
 
     public void HideJoinPanel()

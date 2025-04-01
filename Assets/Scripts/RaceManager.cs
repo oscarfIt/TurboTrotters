@@ -28,7 +28,8 @@ public class RaceManager : MonoBehaviour
 
         var playerDataList = JoinManager.instance.playerDataList;
 
-        for (int i = 0; i < playerDataList.Count; i++) {
+        for (int i = 0; i < playerDataList.Count; i++)
+        {
             PlayerData data = playerDataList[i];
             Transform spawnPoint = spawnPoints[i];
 
@@ -61,14 +62,14 @@ public class RaceManager : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
-   // public void OnPlayerJoined(PlayerInput player)
-   // {
+    // public void OnPlayerJoined(PlayerInput player)
+    // {
     //    player.gameObject.name = "Player_" + player.playerIndex.ToString();
     //    players.Add(player.gameObject);
-  //  }
+    //  }
 
     public void SetLeader(GameObject leader)
     {
@@ -97,7 +98,7 @@ public class RaceManager : MonoBehaviour
     {
 
         Vector3 startPos = pigToKick.transform.position;
-        Vector3 targetPos = currentLeader.transform.position;;
+        Vector3 targetPos = currentLeader.transform.position;
 
         float elapsedTime = 0f;
 
