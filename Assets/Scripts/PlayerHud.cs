@@ -6,7 +6,7 @@ public class PlayerHud : MonoBehaviour
     public TMP_Text playerNameText;
     public Image[] turboIcons;
     public Image crownIcon;
-
+    public Image backgroundImage;
 
     void Start()
     {
@@ -35,4 +35,17 @@ public class PlayerHud : MonoBehaviour
         crownIcon.enabled = isVisible;
     }
 
+    public void SetPlayerColor(Color color) {
+        foreach (var icon in turboIcons)
+        {
+            icon.color = color;
+        }
+        playerNameText.color = color;
+       // if (backgroundImage != null)
+       // {
+          //  Color bg = color;
+           // bg.a = 0.2f; 
+          //  backgroundImage.color = bg;
+       // }
+    }
 }

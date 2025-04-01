@@ -1109,6 +1109,7 @@ MonoBehaviour:
   - {fileID: 2017413353}
   - {fileID: 1324123552}
   crownIcon: {fileID: 1329949153}
+  backgroundImage: {fileID: 168324378}
 --- !u!1001 &174389225
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3619,6 +3620,7 @@ MonoBehaviour:
   - {fileID: 1379164852}
   - {fileID: 1633164376}
   crownIcon: {fileID: 559537859}
+  backgroundImage: {fileID: 393489352}
 --- !u!1001 &396482260
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6774,6 +6776,7 @@ MonoBehaviour:
   - {fileID: 227952490}
   - {fileID: 1074651338}
   crownIcon: {fileID: 1259034226}
+  backgroundImage: {fileID: 909159924}
 --- !u!1001 &926848961
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15399,6 +15402,7 @@ MonoBehaviour:
   - {fileID: 1622479143}
   - {fileID: 1453926959}
   crownIcon: {fileID: 642386889}
+  backgroundImage: {fileID: 2125007239}
 --- !u!1 &2137716915
 GameObject:
   m_ObjectHideFlags: 0

@@ -72,6 +72,7 @@ public class RaceManager : MonoBehaviour
         if (players.Contains(leader))
         {
             currentLeader = leader;
+            FindObjectOfType<RaceHUDManager>().UpdateLeader(players.IndexOf(leader));
         }
         else
         {

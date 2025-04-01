@@ -19,11 +19,13 @@ public class RaceHUDManager : MonoBehaviour
 
     public void SetupHUD(List<GameObject> players) {
         Debug.Log(" COUNT " + players.Count);
+        var playerDataList = JoinManager.instance.playerDataList;
         for (int i = 0; i < players.Count; i++)
         {
 
             var curHud = playerHUDs[i];
             curHud.SetPlayerName(i + 1);
+            curHud.SetPlayerColor(playerDataList[i].color);
             curHud.gameObject.SetActive(true);
             curHud.SetTurboCount(2);
         }
