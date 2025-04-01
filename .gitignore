@@ -77,5 +77,5 @@ crashlytics-build.properties
 /[Aa]ssets/StoneUI/*
 /[Aa]ssets/PBS Barrels and Crates/*
 
-# Misc
-*.meta
+# # Misc
+# *.meta
