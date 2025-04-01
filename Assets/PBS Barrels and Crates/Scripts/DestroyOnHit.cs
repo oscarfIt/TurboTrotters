@@ -17,7 +17,7 @@ public class DestroyOnHit : MonoBehaviour
 	// Update is called once per frame
 	void OnCollisionEnter(Collision col)
 	{
-		if (!col.rigidbody || col.rigidbody.mass < GetComponent<Rigidbody>().mass)
+		if (!col.rigidbody || col.rigidbody.mass * 10 < GetComponent<Rigidbody>().mass)
 			return;
 
 		// instantiate the exploding barrel
