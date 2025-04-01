@@ -324,7 +324,7 @@ MonoBehaviour:
     m_ActionId: 3a60d863-d5cf-41d9-8b22-07fec8675465
     m_ActionName: UI/TrackedDeviceOrientation
   m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: 'KeyBoard[WASD]'
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Pig
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
