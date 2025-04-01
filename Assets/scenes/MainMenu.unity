@@ -423,7 +423,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 50.1, y: -214.4}
+  m_AnchoredPosition: {x: 30.5, y: -145.4}
   m_SizeDelta: {x: 35.0206, y: 35.0206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &184101495
@@ -1026,7 +1026,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 103.7, y: -291.8}
+  m_AnchoredPosition: {x: 84.10002, y: -222.79999}
   m_SizeDelta: {x: 35.0206, y: 35.0206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &349703337
@@ -1237,7 +1237,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 50.1, y: -253.9}
+  m_AnchoredPosition: {x: 30.500023, y: -184.9}
   m_SizeDelta: {x: 35.0206, y: 35.0206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &458664610
@@ -1647,7 +1647,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 49.3, y: -291.8}
+  m_AnchoredPosition: {x: 29.700024, y: -222.79999}
   m_SizeDelta: {x: 35.0206, y: 35.0206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &609660164
@@ -1983,7 +1983,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &684656235
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3869,12 +3869,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Welcome to <b><color=#8B0000>Turbo Trotters!</b></color>\n\n<b>How to
-    Play:</b>\n- <b><color=#000080>Race</color> against your friends !\n- Eat<b>
+    Play:</b>\n- <b><color=#000080>Race</color></b> against your friends !\n- Eat<b>
     <color=#8B4513>Slop</color></b> to grow bigger and <b><color=#8B4513>Knock</color></b>
     the other swines out the way!\n- Pickup <b><color=#DAA520>Turbo Charges</b></color>
     and use them to <b><color=#DAA520>Dash</b></color> through the race!\n- Be <b><color=#006400>First</color></b>
     to cross the <b><color=#006400>Finish Line!</color></b>\n\n<b>Controls:</b>\n-
-    Run \t- WASD /       \n- Jump \t- Space /    /\n- Turbo \t- Shift   /    /\n\n\n\n"
+    Run \t- WASD /       \n- Jump \t- Space /     /\n- Turbo \t- Shift   /     /\n\n\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 776dbf8a5b9ab6f48ad1a1aad26a1245, type: 2}
   m_sharedMaterial: {fileID: 4000575588420602707, guid: 776dbf8a5b9ab6f48ad1a1aad26a1245, type: 2}
@@ -4485,7 +4485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 103.7, y: -253.9}
+  m_AnchoredPosition: {x: 84.10002, y: -184.9}
   m_SizeDelta: {x: 35.0206, y: 35.0206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1925542464
