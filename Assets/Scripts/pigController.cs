@@ -244,6 +244,18 @@ public class pigController : MonoBehaviour
             EatSlop(1);
             animator.SetTrigger("Eat");
         }
+        else if (other.gameObject.CompareTag(TrackSection.SouthStraight) ||
+                 other.gameObject.CompareTag(TrackSection.EastStraight) ||
+                 other.gameObject.CompareTag(TrackSection.NorthStraight) ||
+                 other.gameObject.CompareTag(TrackSection.WestStraight) ||
+                 other.gameObject.CompareTag(TrackSection.SecantNorthEast) ||
+                 other.gameObject.CompareTag(TrackSection.SecantNorthWest) ||
+                 other.gameObject.CompareTag(TrackSection.SecantSouthEast) ||
+                 other.gameObject.CompareTag(TrackSection.SecantSouthWest))
+        {
+            raceManager.SetCurrentTrackSection(other.gameObject.tag);
+            Debug.Log($"Plane {gameObject.name} entered track section: {other.gameObject.tag}");
+        }
         else if (other.CompareTag("FinishLine"))
         {
             Debug.Log($"{gameObject.name} CROSSED THE FINISH LINE!");
