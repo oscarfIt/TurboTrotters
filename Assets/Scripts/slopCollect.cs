@@ -23,8 +23,6 @@ public class slopCollect : MonoBehaviour
     {
         if (other.CompareTag("Player")) 
         {
-            Animator animator = other.GetComponent<Animator>();
-            animator.SetTrigger("Eat");
             audioSource.Play();
             slopCollider.enabled = false;
 

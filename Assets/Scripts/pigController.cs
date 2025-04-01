@@ -14,9 +14,7 @@ public class pigController : MonoBehaviour
 
     // Constants
     public float turnSpeed = 200f;
-    public float jumpForce = 600f;
     public float groundDistance = 0.3f;
-    public float downwardsForce = 200f;
 
     [Header("Jump Settings")]
     public Transform groundCheck;
@@ -42,6 +40,8 @@ public class pigController : MonoBehaviour
     public int mudIndex = 4;
     private float baseSpeed = 20f;
     private float currentSpeed = 0f;
+    private float jumpForce = 600f;
+    private float downwardsForce = 300f;
 
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
@@ -161,7 +161,7 @@ public class pigController : MonoBehaviour
     {
         if (jumped && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            StartCoroutine(SmoothJump());
             if (jumpSound != null) { audioSource.PlayOneShot(jumpSound, 0.5f); }
             jumped = false;
             Debug.Log("Jumped!");
@@ -252,13 +252,13 @@ public class pigController : MonoBehaviour
         {
             Debug.Log($"Player {collision.gameObject.name} collided with {gameObject.name}");
             Rigidbody otherPigRb = collision.gameObject.GetComponent<Rigidbody>();
-            if (otherPigRb.mass < rb.mass)
+            if (otherPigRb.mass > rb.mass)
             {
-                float massDiff = rb.mass - otherPigRb.mass;
+                float massDiff = otherPigRb.mass - rb.mass;
                 Debug.Log($"Mass difference: {massDiff}");
-                // Push the other pig away
-                Vector3 pushDirection = (collision.transform.position - transform.position).normalized;
-                otherPigRb.AddForce(pushDirection * massDiff * PigMass.COLLISION_FORCE, ForceMode.Impulse);
+                // Get pushed away from the other pig
+                Vector3 pushDirection = (transform.position - collision.transform.position).normalized;
+                StartCoroutine(SmoothCollisionForce(pushDirection, massDiff));
             }
         }
     }
@@ -335,8 +335,37 @@ public class pigController : MonoBehaviour
         return viewportPosition.x > 0f && viewportPosition.z > 0f;
     }
 
+
     public void setPlayerIndex(int index) { 
-        playerIndex = index;
+        playerIndex = index;}
+
+    private System.Collections.IEnumerator SmoothJump()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < Movement.JUMP_DURATION)
+        {
+            float force = Mathf.Lerp(jumpForce, 0, elapsedTime / Movement.JUMP_DURATION);
+            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Acceleration);
+            elapsedTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
+    }
+
+    private System.Collections.IEnumerator SmoothCollisionForce(Vector3 pushDirection, float massDiff)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < Movement.COLLISION_PUSH_DURATION)
+        {
+            float force = Mathf.Lerp(massDiff * PigMass.COLLISION_FORCE, 0, elapsedTime / Movement.COLLISION_PUSH_DURATION);
+            rb.AddForce(pushDirection * force * Time.fixedDeltaTime, ForceMode.Acceleration);
+            elapsedTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
     }
 
 }
