@@ -4344,8 +4344,14 @@ MonoBehaviour:
   barrelPrefab: {fileID: 3880928084190067835, guid: 798948fe4e5bf5b4b9d1a2139b8ed552, type: 3}
   spawnPoints:
   - {fileID: 345274036}
-  spawnRadius: 2
-  spawnInterval: 3
+  - {fileID: 1077466572}
+  - {fileID: 610608724}
+  - {fileID: 916792843}
+  - {fileID: 1334171839}
+  - {fileID: 944479835}
+  - {fileID: 842271946}
+  spawnRadius: 3
+  spawnInterval: 2
 --- !u!1001 &1951573445
 PrefabInstance:
   m_ObjectHideFlags: 0
