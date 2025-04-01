@@ -49,11 +49,7 @@ public class RaceManager : MonoBehaviour
                     rend.material = chosenMat;
                 }
             }
-
-
-            players.Add( player.gameObject);
-
-           
+            players.Add(player.gameObject);
         }
     }
 
@@ -122,8 +118,14 @@ public class RaceManager : MonoBehaviour
         currentTrackSection = newSection;
     }
 
-    public void NextLap()
+    public void NextLap(string pigName)
     {
+        if (pigName != currentLeader.name)
+        {
+            Debug.LogWarning("Pig " + pigName + " is not the current leader, cannot advance lap.");
+            return;
+        }
+        Spawner spawnerScript;
         currentLap++;
         if (currentLap >= numLaps)
         {
@@ -134,7 +136,9 @@ public class RaceManager : MonoBehaviour
             // Note > 0 so we don't spawn objects on the first lap, done in Spawner.Start()
             foreach (GameObject spawner in spawners)
             {
-                spawner.GetComponent<Spawner>().Spawn();
+                spawnerScript = spawner.GetComponent<Spawner>();
+                spawnerScript.NewLapCleanup();
+                spawnerScript.Spawn();
             }
         }
     }
