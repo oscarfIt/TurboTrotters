@@ -31,6 +31,7 @@ public class RaceManager : MonoBehaviour
         );
 
             player.transform.position = spawnPoint.position;
+            players.Add( player.gameObject);
         }
     }
 
