@@ -117,6 +117,7 @@ public class pigController : MonoBehaviour
 
         if (!IsInView() && !beingKicked)
         {
+            Debug.Log($"{gameObject.name} is out of view, kicking back!");
             turboPoints.remove();
             raceHUDManager.UpdateTurbo(playerIndex, turboPoints.getPoints());
             StartCoroutine(raceManager.KickPig(gameObject));
@@ -339,7 +340,8 @@ public class pigController : MonoBehaviour
     private bool IsInView()
     {
         Vector3 viewportPosition = mainCamera.WorldToViewportPoint(transform.position);
-        return viewportPosition.x > 0f && viewportPosition.z > 0f;
+        Debug.Log($"Viewport Position: {viewportPosition}");
+        return viewportPosition.x > 0f && viewportPosition.y > 0f && viewportPosition.x < 1f && viewportPosition.y < 1f;
     }
 
 
