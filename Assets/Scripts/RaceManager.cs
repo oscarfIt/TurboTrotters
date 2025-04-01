@@ -136,7 +136,7 @@ public class RaceManager : MonoBehaviour
         currentLap++;
         if (currentLap >= numLaps)
         {
-            // End the thing
+            FindObjectOfType<RaceResultsManager>().ShowResults(players.IndexOf(currentLeader));
         }
         else if (currentLap > 0)
         {
