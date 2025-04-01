@@ -252,13 +252,13 @@ public class pigController : MonoBehaviour
         {
             Debug.Log($"Player {collision.gameObject.name} collided with {gameObject.name}");
             Rigidbody otherPigRb = collision.gameObject.GetComponent<Rigidbody>();
-            if (otherPigRb.mass < rb.mass)
+            if (otherPigRb.mass > rb.mass)
             {
-                float massDiff = rb.mass - otherPigRb.mass;
+                float massDiff = otherPigRb.mass - rb.mass;
                 Debug.Log($"Mass difference: {massDiff}");
-                // Push the other pig away
-                Vector3 pushDirection = (collision.transform.position - transform.position).normalized;
-                otherPigRb.AddForce(pushDirection * massDiff * PigMass.COLLISION_FORCE, ForceMode.Impulse);
+                // Get pushed away from the other pig
+                Vector3 pushDirection = (transform.position - collision.transform.position).normalized;
+                rb.AddForce(pushDirection * massDiff * PigMass.COLLISION_FORCE, ForceMode.Impulse);
             }
         }
     }
