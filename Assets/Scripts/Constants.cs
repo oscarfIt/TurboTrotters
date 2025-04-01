@@ -23,6 +23,7 @@ public struct PigMass
     public const int MAX = 20;
     public const float SLOP_INCREASE = 2;
     public const float DISTANCE_DECREASE = 0.1f;
+    public const float COLLISION_FORCE = 50f;
 }
 
 
