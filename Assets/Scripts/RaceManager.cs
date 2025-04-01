@@ -6,6 +6,9 @@ public class RaceManager : MonoBehaviour
 {
     private List<GameObject> players;
     private GameObject currentLeader;   // Oh the duplication
+    private GameObject[] spawners;
+    private int currentLap = -1;    // Since players start behind the start line
+    public int numLaps; // Set this in the editor
 
     public string currentTrackSection;  // Used pretty often in LeaderTracker.cs
 
@@ -18,8 +21,10 @@ public class RaceManager : MonoBehaviour
     public Material yellowMaterial;
     void Start()
     {
-       players = new List<GameObject>();
+        players = new List<GameObject>();
         currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
+        spawners = GameObject.FindGameObjectsWithTag("Spawner");
+        if (numLaps == 0) numLaps = 1;
 
         var playerDataList = JoinManager.instance.playerDataList;
 
@@ -115,6 +120,23 @@ public class RaceManager : MonoBehaviour
     public void SetCurrentTrackSection(string newSection)
     {
         currentTrackSection = newSection;
+    }
+
+    public void NextLap()
+    {
+        currentLap++;
+        if (currentLap >= numLaps)
+        {
+            // End the thing
+        }
+        else if (currentLap > 0)
+        {
+            // Note > 0 so we don't spawn objects on the first lap, done in Spawner.Start()
+            foreach (GameObject spawner in spawners)
+            {
+                spawner.GetComponent<Spawner>().Spawn();
+            }
+        }
     }
 
     // Deja vu

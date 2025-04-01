@@ -41,6 +41,11 @@ public class LeaderTracker : MonoBehaviour
             Debug.Log($"Plane {gameObject.name} entered track section: {other.gameObject.tag}");
             raceManager.SetCurrentTrackSection(other.gameObject.tag);
         }
+        else if (other.gameObject.CompareTag("FinishLine"))
+        {
+            raceManager.NextLap();
+            Debug.Log($"Plane {gameObject.name} crossed the finish line!");
+        }
     }
 
     private void SetNewLeader(GameObject newLeader)
