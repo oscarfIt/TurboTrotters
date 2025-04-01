@@ -11,6 +11,7 @@ namespace FastMesh_Example
         Color backgroundColor = Color.white;
         Color textColor = Color.black; 
     
+#if UNITY_EDITOR
         private void OnEnable()
         {
             SceneView.duringSceneGui += OnSceneGUI;
@@ -52,7 +53,7 @@ namespace FastMesh_Example
             // GUILayout.EndArea();
             Handles.EndGUI();
         }
+#endif
     }
+
 }
-
-
