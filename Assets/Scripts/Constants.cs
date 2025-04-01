@@ -34,8 +34,9 @@ public struct PigScale
 public struct TerrainFriction
 {
     public const float DEFAULT_DRAG = 1f;
+    public const float GRASS_DRAG = 3f;
     public const float ICE_DRAG = 0.2f;
-    public const float MUD_DRAG = 5f;
+    public const float MUD_DRAG = 10f;
     public const float DEFAULT_SPEED_MULTIPLIER = 1f;
     public const float ICE_SPEED_MULTIPLIER = 1.2f;
     public const float MUD_SPEED_MULTIPLIER = 0.8f;

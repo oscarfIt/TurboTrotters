@@ -35,6 +35,7 @@ public class pigController : MonoBehaviour
 
     // relates to the ground layer levels
     [Header("Terrain Layer Mapping")]
+    public int grassIndex = 0;
     public int groundSoilIndex = 1; // Adjust based on your terrain layer order
     public int iceIndex = 2;
     public int mudIndex = 4;
@@ -146,7 +147,7 @@ public class pigController : MonoBehaviour
             Debug.Log("Jumped!");
         }
     }
-    
+
     private float GetTurboMultiplier()
     {
         float multiplier = 1f;
@@ -162,7 +163,7 @@ public class pigController : MonoBehaviour
             if (Time.timeAsDouble >= turboEndTime)  // Boost has ended
             {
                 boosting = false;
-                multiplier = (1/TurboBoost.SPEED_MULTIPLIER);
+                multiplier = (1 / TurboBoost.SPEED_MULTIPLIER);
                 Debug.Log("Turbo ended!");
             }
             else // Boost is active
@@ -202,7 +203,7 @@ public class pigController : MonoBehaviour
         rb.mass = Mathf.Clamp(newMass, PigMass.MIN, PigMass.MAX);
         if (newScale.magnitude >= minScaleMagnitude)
         {
-            transform.localScale = newScale;        
+            transform.localScale = newScale;
         }
     }
 
@@ -227,6 +228,11 @@ public class pigController : MonoBehaviour
         if (terrainIndex == groundSoilIndex)
         {
             rb.linearDamping = TerrainFriction.DEFAULT_DRAG;  // Normal drag
+            multiplier = TerrainFriction.DEFAULT_SPEED_MULTIPLIER; // Normal speed
+        }
+        else if (terrainIndex == grassIndex)
+        {
+            rb.linearDamping = TerrainFriction.GRASS_DRAG;  // Increase drag = harder to move
             multiplier = TerrainFriction.DEFAULT_SPEED_MULTIPLIER; // Normal speed
         }
         else if (terrainIndex == iceIndex)

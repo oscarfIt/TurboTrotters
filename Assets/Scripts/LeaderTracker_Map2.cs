@@ -5,13 +5,13 @@ public class LeaderTracker_Map2 : MonoBehaviour
     public GameObject currentLeader;
     public GameObject centreObject; // Set this in the editor
     public Vector3 trackCentre;
-
-    public GameObject lookAtTarget;
     private string currentTrackSection;
     void Start()
     {
-
-        trackCentre = lookAtTarget.transform.position;
+        if (centreObject == null)
+            trackCentre = new Vector3(250, 25, 150); // This default is for Map1
+        else
+            trackCentre = centreObject.transform.position;
         currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
     }
 
