@@ -5,7 +5,10 @@ public class MainMenuManager : MonoBehaviour
 {
     public GameObject mainMenuPanel;
     public GameObject optionsPanel;
+    public GameObject helpPanel;
     public GameObject playButton;
+    public GameObject helpButton;
+    public GameObject exitHelpButton;
     // public GameObject mapSelectPanel;
 
     public void OnPlayButton()
@@ -31,6 +34,17 @@ public class MainMenuManager : MonoBehaviour
     {
         optionsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(playButton);
+    }
+
+    public void OnHelpButton() {
+        mainMenuPanel.SetActive(false);
+        helpPanel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(exitHelpButton);
+    }
+    public void OnExitHelpButton() {
+        mainMenuPanel.SetActive(true);
+        helpPanel.SetActive(false);
         EventSystem.current.SetSelectedGameObject(playButton);
     }
 }
