@@ -8,19 +8,27 @@ public class RaceHUDManager : MonoBehaviour
     private RaceManager raceManager;
     void Start()
     {
+        Debug.Log("HUDMGR STARTED");
         if (raceManager == null) { 
             raceManager = GameObject.FindGameObjectsWithTag("RaceManager")[0].GetComponent<RaceManager>();
         }
 
         players= raceManager.players;
-
-        for (int i = 0; i < players.Count; i++) { 
-            var curHud=playerHUDs[i];
-            curHud.SetPlayerName(i+1);
-            curHud.gameObject.SetActive(true);
-        }
+        
     }
 
+    public void SetupHUD(List<GameObject> players) {
+        Debug.Log(" COUNT " + players.Count);
+        for (int i = 0; i < players.Count; i++)
+        {
+
+            var curHud = playerHUDs[i];
+            curHud.SetPlayerName(i + 1);
+            curHud.gameObject.SetActive(true);
+            curHud.SetTurboCount(2);
+        }
+
+    }
     public void UpdateTurbo(int playerIndex, int turboCount)
     {
         playerHUDs[playerIndex].SetTurboCount(turboCount);

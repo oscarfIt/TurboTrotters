@@ -9,8 +9,7 @@ public class pigController : MonoBehaviour
     public RaceManager raceManager;
     public PlayerInput pigControls;
     public TurboPoints turboPoints;
-  //  public RaceHUDManager raceHUDManager;
-
+ 
     [Header("Movement Settings")]
 
     // Constants
@@ -54,6 +53,9 @@ public class pigController : MonoBehaviour
     public float stepInterval = 0.3f;
     private float stepTimer;
 
+    public int playerIndex;
+    private RaceHUDManager raceHUDManager;
+   
     void Start()
     {
         // HUDManager.Instance.UpdateHUDPosition(1, 2);
@@ -70,6 +72,11 @@ public class pigController : MonoBehaviour
         rb.mass = PigMass.MIN;
         turboPoints = new TurboPoints();
         audioSource = GetComponent<AudioSource>();
+
+        if (raceHUDManager == null)
+            raceHUDManager = GameObject.FindGameObjectsWithTag("RaceHUDManager")[0].GetComponent<RaceHUDManager>();
+
+        Debug.Log("Player " + playerIndex + " spawned");
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -86,6 +93,7 @@ public class pigController : MonoBehaviour
     public void OnTurboBoost(InputAction.CallbackContext context)
     {
         boosted = context.action.triggered;
+      
     }
 
 
@@ -169,6 +177,11 @@ public class pigController : MonoBehaviour
             boosted = false;
             turboEndTime = Time.timeAsDouble + TurboBoost.DURATION;
             Debug.Log("Turbo activated!");
+            animator.SetTrigger("Turbo");
+
+            //Update HUD
+            raceHUDManager.UpdateTurbo(playerIndex, turboPoints.getPoints());
+
         }
         if (boosting)
         {
@@ -224,6 +237,7 @@ public class pigController : MonoBehaviour
         if (other.CompareTag("TurboPickup"))
         {
             turboPoints.add();
+            raceHUDManager.UpdateTurbo(playerIndex,turboPoints.getPoints());
         }
         else if (other.CompareTag("Slop"))
         {
@@ -319,6 +333,10 @@ public class pigController : MonoBehaviour
     {
         Vector3 viewportPosition = mainCamera.WorldToViewportPoint(transform.position);
         return viewportPosition.x > 0f && viewportPosition.z > 0f;
+    }
+
+    public void setPlayerIndex(int index) { 
+        playerIndex = index;
     }
 
 }

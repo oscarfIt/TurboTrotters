@@ -44,12 +44,16 @@ public class RaceManager : MonoBehaviour
                     rend.material = chosenMat;
                 }
             }
-
-
+            var playerController = player.GetComponent<pigController>();
+            playerController.setPlayerIndex(i);
+            //player.gameObject.setPlayerIndex(i);
+            // Debug.Log("Player " + i + " Spawn");
             players.Add( player.gameObject);
 
            
         }
+
+        FindObjectOfType<RaceHUDManager>().SetupHUD(players);
     }
 
     void Update()

@@ -10,7 +10,7 @@ public class PlayerHud : MonoBehaviour
 
     void Start()
     {
-        
+       // playerNameText.enabled = true;
     }
 
     // Update is called once per frame
@@ -20,6 +20,8 @@ public class PlayerHud : MonoBehaviour
     }
     public void SetPlayerName(int playerNum) {
         playerNameText.text = "Player " + playerNum;
+        playerNameText.enabled = true;
+        Debug.Log("NAMED");
     }
     public void SetTurboCount(int numTurbo)
     {
