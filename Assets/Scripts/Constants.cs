@@ -5,6 +5,7 @@ struct Movement
     public const float KICKED_POSITION_OFFSET = 3f;
     public const float KICK_DURATION = 1f;
     public const float KICKED_HEIGHT = 2f;
+    public const float JUMP_DURATION = 0.5f;
 }
 
 

@@ -152,11 +152,26 @@ public class pigController : MonoBehaviour
     {
         if (jumped && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            StartCoroutine(SmoothJump());
             if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
             jumped = false;
             Debug.Log("Jumped!");
         }
+    }
+
+    private System.Collections.IEnumerator SmoothJump()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < Movement.JUMP_DURATION)
+        {
+            float force = Mathf.Lerp(jumpForce, 0, elapsedTime / Movement.JUMP_DURATION);
+            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Acceleration);
+            elapsedTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
     }
     
     private float GetTurboMultiplier()
