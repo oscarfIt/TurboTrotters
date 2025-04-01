@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class RaceManager : MonoBehaviour
 {
-    private List<GameObject> players;
+    public List<GameObject> players;
     private GameObject currentLeader;   // Oh the duplication
 
     public string currentTrackSection;  // Used pretty often in LeaderTracker.cs
@@ -44,12 +44,16 @@ public class RaceManager : MonoBehaviour
                     rend.material = chosenMat;
                 }
             }
-
-
+            var playerController = player.GetComponent<pigController>();
+            playerController.setPlayerIndex(i);
+            //player.gameObject.setPlayerIndex(i);
+            // Debug.Log("Player " + i + " Spawn");
             players.Add( player.gameObject);
 
            
         }
+
+        FindObjectOfType<RaceHUDManager>().SetupHUD(players);
     }
 
     void Update()
@@ -68,6 +72,7 @@ public class RaceManager : MonoBehaviour
         if (players.Contains(leader))
         {
             currentLeader = leader;
+            FindObjectOfType<RaceHUDManager>().UpdateLeader(players.IndexOf(leader));
         }
         else
         {

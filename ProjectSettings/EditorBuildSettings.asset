@@ -30,6 +30,6 @@ EditorBuildSettings:
     path: Assets/scenes/SelectionLobby.unity
     guid: 3e9c6cb836b768745a3d6973884df1f4
   m_configObjects:
-    com.unity.input.settings: {fileID: 11400000, guid: f5243db0e56cef643bdc5d258c15fc7c, type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: 3a779b13d369b514bb2f59425f1f112b, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 1c139567496a5354f8ea9c70044a8dbc, type: 3}
   m_UseUCBPForAssetBundles: 0

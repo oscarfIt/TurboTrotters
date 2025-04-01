@@ -17,6 +17,7 @@ TagManager:
   - SecantSouthWestSection
   - SecantSouthEastSection
   - RaceManager
+  - RaceHUDManager
   layers:
   - Default
   - TransparentFX
