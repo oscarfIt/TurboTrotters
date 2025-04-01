@@ -152,10 +152,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2098763778633186292}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 832f0bac090e55542ac9e795c3ca17f2, type: 3}
+  m_Script: {fileID: 11500000, guid: edc9988117532a941a9579fb5dfc12c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 55
   hoverSpeed: 2
   hoverHeight: 0.2
   jumpForce: 20

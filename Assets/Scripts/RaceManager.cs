@@ -4,16 +4,35 @@ using UnityEngine.InputSystem;
 
 public class RaceManager : MonoBehaviour
 {
-    private List<GameObject> players;
+    private List<PlayerInput> players;
     private GameObject currentLeader;   // Oh the duplication
 
     public string currentTrackSection;  // Used pretty often in LeaderTracker.cs
 
+    public GameObject playerPrefab;
+    public Transform[] spawnPoints;
+
 
     void Start()
     {
-        players = new List<GameObject>();
+       players = new List<PlayerInput>();
         currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
+
+        var playerDataList = JoinManager.instance.playerDataList;
+
+        for (int i = 0; i < playerDataList.Count; i++) {
+            PlayerData data = playerDataList[i];
+            Transform spawnPoint = spawnPoints[i];
+
+            PlayerInput player = PlayerInput.Instantiate(
+            playerPrefab,
+            controlScheme: null,
+            pairWithDevice: data.inputDevice
+        );
+
+            player.transform.position = spawnPoint.position;
+            players.Add( player );
+        }
     }
 
     void Update()
@@ -21,23 +40,23 @@ public class RaceManager : MonoBehaviour
         
     }
 
-    public void OnPlayerJoined(PlayerInput player)
-    {
-        player.gameObject.name = "Player_" + player.playerIndex.ToString();
-        players.Add(player.gameObject);
-    }
+   // public void OnPlayerJoined(PlayerInput player)
+   // {
+    //    player.gameObject.name = "Player_" + player.playerIndex.ToString();
+    //    players.Add(player.gameObject);
+  //  }
 
     public void SetLeader(GameObject leader)
     {
-        if (players.Contains(leader))
-        {
+       // if (players.Contains(leader))
+       // {
             currentLeader = leader;
-        }
-        else
-        {
+       // }
+       // else
+       // {
             Debug.LogError("Attempting to set a non-player object as leader: " + leader.name);  // This seems like a mild error to throw given the circumstances
             return;
-        }
+       // }
     }
 
 

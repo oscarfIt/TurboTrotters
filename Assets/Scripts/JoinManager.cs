@@ -21,6 +21,10 @@ public class JoinManager : MonoBehaviour
     public GameObject map1Btn;
 
     public CanvasGroup joinPanelCanvasGroup;
+
+    public PlayerInputManager inputManager;
+
+    public List<PlayerData> playerDataList = new List<PlayerData>();
     // Selected map name (default)
     public string selectedMap;
 
@@ -32,6 +36,7 @@ public class JoinManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);//make JoinManager persist
         }
         else
         {
@@ -105,8 +110,25 @@ public class JoinManager : MonoBehaviour
 
     public void StartGame()
     {
+
         // Optionally, pass the player data to a Game Manager.
         // Then load the selected map scene.
+        playerDataList.Clear();
+        foreach (LobbyPlayer lobbyplayer in joinedPlayers) { 
+            PlayerInput input = lobbyplayer.GetComponent<PlayerInput>();
+            if (input != null) {
+                var data = new PlayerData
+                {
+                    inputDevice = input.devices[0],
+                    color = lobbyplayer.GetSelectedColor()
+                };
+                playerDataList.Add(data);
+            }
+
+            Destroy(lobbyplayer.gameObject);
+
+        }
+
         Debug.Log("Starting game on map: " + selectedMap + " with " + joinedPlayers.Count + " players.");
         SceneManager.LoadScene(selectedMap);
     }
