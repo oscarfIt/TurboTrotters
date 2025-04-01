@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class RaceManager : MonoBehaviour
 {
-    private List<PlayerInput> players;
+    private List<GameObject> players;
     private GameObject currentLeader;   // Oh the duplication
 
     public string currentTrackSection;  // Used pretty often in LeaderTracker.cs
@@ -15,7 +15,7 @@ public class RaceManager : MonoBehaviour
 
     void Start()
     {
-       players = new List<PlayerInput>();
+       players = new List<GameObject>();
         currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
 
         var playerDataList = JoinManager.instance.playerDataList;
@@ -31,7 +31,6 @@ public class RaceManager : MonoBehaviour
         );
 
             player.transform.position = spawnPoint.position;
-            players.Add( player );
         }
     }
 
@@ -48,15 +47,15 @@ public class RaceManager : MonoBehaviour
 
     public void SetLeader(GameObject leader)
     {
-       // if (players.Contains(leader))
-       // {
+        if (players.Contains(leader))
+        {
             currentLeader = leader;
-       // }
-       // else
-       // {
+        }
+        else
+        {
             Debug.LogError("Attempting to set a non-player object as leader: " + leader.name);  // This seems like a mild error to throw given the circumstances
             return;
-       // }
+        }
     }
 
 
