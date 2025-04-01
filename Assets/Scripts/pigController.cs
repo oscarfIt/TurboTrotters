@@ -229,6 +229,11 @@ public class pigController : MonoBehaviour
             EatSlop(1);
             animator.SetTrigger("Eat");
         }
+        else if (other.CompareTag("FinishLine"))
+        {
+            raceManager.NextLap(gameObject.name);
+            Debug.Log($"{gameObject.name} CROSSED THE FINISH LINE!");
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
