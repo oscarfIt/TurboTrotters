@@ -26,7 +26,6 @@ public class LeaderTracker : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"Player {other.gameObject.name} entered trigger");
             SetNewLeader(other.gameObject);
         }
         else if (other.gameObject.CompareTag(TrackSection.SouthStraight) ||

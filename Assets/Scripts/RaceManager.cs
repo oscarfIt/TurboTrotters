@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class RaceManager : MonoBehaviour
 {
@@ -127,16 +128,12 @@ public class RaceManager : MonoBehaviour
 
     public void NextLap(string pigName)
     {
-        if (pigName != currentLeader.name)
-        {
-            Debug.LogWarning("Pig " + pigName + " is not the current leader, cannot advance lap.");
-            return;
-        }
+        if (pigName != currentLeader.name) return;
         Spawner spawnerScript;
         currentLap++;
         if (currentLap >= numLaps)
         {
-            // End the thing
+            // SceneManager.LoadScene("RaceEndScene");
         }
         else if (currentLap > 0)
         {

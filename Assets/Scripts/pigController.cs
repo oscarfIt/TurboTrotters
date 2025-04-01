@@ -246,8 +246,8 @@ public class pigController : MonoBehaviour
         }
         else if (other.CompareTag("FinishLine"))
         {
-            raceManager.NextLap(gameObject.name);
             Debug.Log($"{gameObject.name} CROSSED THE FINISH LINE!");
+            raceManager.NextLap(gameObject.name);
         }
     }
 
