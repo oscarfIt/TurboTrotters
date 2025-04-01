@@ -297,6 +297,17 @@
                     "action": "TurboBoost",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dd6428c6-accb-4cb2-a456-5b65fcdbb86a",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TurboBoost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
