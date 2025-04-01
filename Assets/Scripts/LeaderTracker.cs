@@ -53,14 +53,12 @@ public class LeaderTracker : MonoBehaviour
             Vector3 incrementVector = GetIncrementVector(1f);
             // Detach from the current leader
             currentLeader = null;
-            transform.SetParent(null);
             transform.position += incrementVector;
             // Return and wait for the next trigger
             return;
         }
 
         currentLeader = newLeader;
-        transform.SetParent(currentLeader.transform);
         raceManager.SetLeader(currentLeader);
 
         // Reset the object's position relative to the new player
@@ -110,6 +108,7 @@ public class LeaderTracker : MonoBehaviour
 
     private void UpdatePlaneOrientation()
     {
+        transform.position = currentLeader.transform.position;
         switch (raceManager.currentTrackSection)
         {
             case TrackSection.SouthStraight:

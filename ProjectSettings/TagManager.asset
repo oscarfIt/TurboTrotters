@@ -17,6 +17,8 @@ TagManager:
   - SecantSouthWestSection
   - SecantSouthEastSection
   - RaceManager
+  - FinishLine
+  - Spawner
   - RaceHUDManager
   layers:
   - Default
