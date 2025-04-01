@@ -2157,6 +2157,7 @@ MonoBehaviour:
   playerListContainer: {fileID: 170879030}
   map1Btn: {fileID: 2133756886}
   joinPanelCanvasGroup: {fileID: 699389356}
+  inputManager: {fileID: 1631862415}
   selectedMap: Map1
 --- !u!1 &1863324626
 GameObject:

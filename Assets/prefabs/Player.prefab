@@ -193,6 +193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9f0d6bc905a974bb7c0192c35c8f01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  raceManager: {fileID: 0}
   pigControls: {fileID: 0}
   turnSpeed: 200
   jumpForce: 6
@@ -205,8 +207,8 @@ MonoBehaviour:
   groundSoilIndex: 1
   iceIndex: 2
   mudIndex: 4
-  jumpSound: {fileID: 8300000, guid: 7aafe7042f43b724799227e5c7613a3b, type: 3}
-  footstepSound: {fileID: 8300000, guid: 2abdd41557920db4ca9f3ac447c3424a, type: 3}
+  jumpSound: {fileID: 8300000, guid: 86072d4e0adbd1342820842462c671d7, type: 3}
+  footstepSound: {fileID: 8300000, guid: 418660a6ddc96f840bbb6334ff2adc42, type: 3}
   stepInterval: 0.3
 --- !u!114 &8830203074779576915
 MonoBehaviour:
@@ -220,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: adf0ab82097d9db458142121116df705, type: 3}
+  m_Actions: {fileID: -944628639613478452, guid: 515ae766de8a1864e95dacd082cbff4f, type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -322,7 +324,7 @@ MonoBehaviour:
     m_ActionId: 3a60d863-d5cf-41d9-8b22-07fec8675465
     m_ActionName: UI/TrackedDeviceOrientation
   m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: 'KeyBoard[WASD]'
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Pig
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

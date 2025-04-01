@@ -9,11 +9,47 @@ public class RaceManager : MonoBehaviour
 
     public string currentTrackSection;  // Used pretty often in LeaderTracker.cs
 
+    public GameObject playerPrefab;
+    public Transform[] spawnPoints;
 
+    public Material redMaterial;
+    public Material blueMaterial;
+    public Material greenMaterial;
+    public Material yellowMaterial;
     void Start()
     {
-        players = new List<GameObject>();
+       players = new List<GameObject>();
         currentTrackSection = TrackSection.SouthStraight;       // Adjust this if we need to start in a different section
+
+        var playerDataList = JoinManager.instance.playerDataList;
+
+        for (int i = 0; i < playerDataList.Count; i++) {
+            PlayerData data = playerDataList[i];
+            Transform spawnPoint = spawnPoints[i];
+
+            PlayerInput player = PlayerInput.Instantiate(
+            playerPrefab,
+            controlScheme: null,
+            pairWithDevice: data.inputDevice
+        );
+
+            player.transform.position = spawnPoint.position;
+
+            Renderer rend = player.gameObject.GetComponentInChildren<Renderer>();
+            if (rend != null)
+            {
+                Material chosenMat = GetMaterialForColor(data.color);
+                if (chosenMat != null)
+                {
+                    rend.material = chosenMat;
+                }
+            }
+
+
+            players.Add( player.gameObject);
+
+           
+        }
     }
 
     void Update()
@@ -21,11 +57,11 @@ public class RaceManager : MonoBehaviour
         
     }
 
-    public void OnPlayerJoined(PlayerInput player)
-    {
-        player.gameObject.name = "Player_" + player.playerIndex.ToString();
-        players.Add(player.gameObject);
-    }
+   // public void OnPlayerJoined(PlayerInput player)
+   // {
+    //    player.gameObject.name = "Player_" + player.playerIndex.ToString();
+    //    players.Add(player.gameObject);
+  //  }
 
     public void SetLeader(GameObject leader)
     {
@@ -40,6 +76,14 @@ public class RaceManager : MonoBehaviour
         }
     }
 
+    private Material GetMaterialForColor(Color color)
+    {
+        if (color == Color.red) return redMaterial;
+        if (color == Color.blue) return blueMaterial;
+        if (color == Color.green) return greenMaterial;
+        if (color == Color.yellow) return yellowMaterial;
+        return null; // fallback
+    }
 
     public System.Collections.IEnumerator KickPig(GameObject pigToKick)
     {
