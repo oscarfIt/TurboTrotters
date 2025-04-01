@@ -101,7 +101,7 @@ public class RaceManager : MonoBehaviour
 
         float elapsedTime = 0f;
 
-        while (elapsedTime < Movement.KICK_DURATION)
+        while (elapsedTime < Movement.KICK_DURATION && pigToKick.transform.position != targetPos)
         {
             targetPos = currentLeader.transform.position; // Maybe check for null here
             targetPos += GetKickedOffset();
@@ -188,6 +188,7 @@ public class RaceManager : MonoBehaviour
                 Debug.LogWarning("Unknown track section, no offset vector applied.");
                 break;
         }
+        offsetVetor.y = Movement.KICKED_HEIGHT; 
         return offsetVetor;
     }
 
