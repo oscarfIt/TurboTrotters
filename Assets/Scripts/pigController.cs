@@ -117,6 +117,8 @@ public class pigController : MonoBehaviour
 
         if (!IsInView() && !beingKicked)
         {
+            turboPoints.remove();
+            raceHUDManager.UpdateTurbo(playerIndex, turboPoints.getPoints());
             StartCoroutine(raceManager.KickPig(gameObject));
         }
 
