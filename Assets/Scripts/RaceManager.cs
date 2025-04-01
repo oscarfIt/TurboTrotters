@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class RaceManager : MonoBehaviour
 {
-    private List<GameObject> players;
+    public List<GameObject> players;
     private GameObject currentLeader;   // Oh the duplication
     private GameObject[] spawners;
     private int currentLap = -1;    // Since players start behind the start line
@@ -49,8 +49,14 @@ public class RaceManager : MonoBehaviour
                     rend.material = chosenMat;
                 }
             }
+            var playerController = player.GetComponent<pigController>();
+            playerController.setPlayerIndex(i);
+            //player.gameObject.setPlayerIndex(i);
+            // Debug.Log("Player " + i + " Spawn");
             players.Add(player.gameObject);
         }
+
+        FindObjectOfType<RaceHUDManager>().SetupHUD(players);
     }
 
     void Update()
@@ -69,6 +75,7 @@ public class RaceManager : MonoBehaviour
         if (players.Contains(leader))
         {
             currentLeader = leader;
+            FindObjectOfType<RaceHUDManager>().UpdateLeader(players.IndexOf(leader));
         }
         else
         {
