@@ -153,7 +153,7 @@ public class pigController : MonoBehaviour
         if (jumped && isGrounded)
         {
             StartCoroutine(SmoothJump());
-            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
+            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound, 0.5f); }
             jumped = false;
             Debug.Log("Jumped!");
         }
