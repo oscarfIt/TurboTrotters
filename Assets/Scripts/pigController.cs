@@ -14,9 +14,7 @@ public class pigController : MonoBehaviour
 
     // Constants
     public float turnSpeed = 200f;
-    public float jumpForce = 600f;
     public float groundDistance = 0.3f;
-    public float downwardsForce = 200f;
 
     [Header("Jump Settings")]
     public Transform groundCheck;
@@ -42,6 +40,8 @@ public class pigController : MonoBehaviour
     public int mudIndex = 4;
     private float baseSpeed = 20f;
     private float currentSpeed = 0f;
+    private float jumpForce = 600f;
+    private float downwardsForce = 300f;
 
     // TODO: Probably a better way to deal with these two
     private Vector2 inputDirection = Vector2.zero;
