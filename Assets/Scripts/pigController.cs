@@ -158,21 +158,6 @@ public class pigController : MonoBehaviour
             Debug.Log("Jumped!");
         }
     }
-
-    private System.Collections.IEnumerator SmoothJump()
-    {
-        float elapsedTime = 0f;
-
-        while (elapsedTime < Movement.JUMP_DURATION)
-        {
-            float force = Mathf.Lerp(jumpForce, 0, elapsedTime / Movement.JUMP_DURATION);
-            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Acceleration);
-            elapsedTime += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
-        }
-
-        if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
-    }
     
     private float GetTurboMultiplier()
     {
@@ -258,7 +243,7 @@ public class pigController : MonoBehaviour
                 Debug.Log($"Mass difference: {massDiff}");
                 // Get pushed away from the other pig
                 Vector3 pushDirection = (transform.position - collision.transform.position).normalized;
-                rb.AddForce(pushDirection * massDiff * PigMass.COLLISION_FORCE, ForceMode.Impulse);
+                StartCoroutine(SmoothCollisionForce(pushDirection, massDiff));
             }
         }
     }
@@ -333,6 +318,34 @@ public class pigController : MonoBehaviour
     {
         Vector3 viewportPosition = mainCamera.WorldToViewportPoint(transform.position);
         return viewportPosition.x > 0f && viewportPosition.z > 0f;
+    }
+
+    private System.Collections.IEnumerator SmoothJump()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < Movement.JUMP_DURATION)
+        {
+            float force = Mathf.Lerp(jumpForce, 0, elapsedTime / Movement.JUMP_DURATION);
+            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Acceleration);
+            elapsedTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
+    }
+
+    private System.Collections.IEnumerator SmoothCollisionForce(Vector3 pushDirection, float massDiff)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < Movement.COLLISION_PUSH_DURATION)
+        {
+            float force = Mathf.Lerp(massDiff * PigMass.COLLISION_FORCE, 0, elapsedTime / Movement.COLLISION_PUSH_DURATION);
+            rb.AddForce(pushDirection * force * Time.fixedDeltaTime, ForceMode.Acceleration);
+            elapsedTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
     }
 
 }

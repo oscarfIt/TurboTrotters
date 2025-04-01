@@ -6,6 +6,7 @@ struct Movement
     public const float KICK_DURATION = 1f;
     public const float KICKED_HEIGHT = 2f;
     public const float JUMP_DURATION = 0.5f;
+    public const float COLLISION_PUSH_DURATION = 0.3f;
 }
 
 
