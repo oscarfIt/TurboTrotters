@@ -9,6 +9,7 @@ public class pigController : MonoBehaviour
     public RaceManager raceManager;
     public PlayerInput pigControls;
     public TurboPoints turboPoints;
+  //  public RaceHUDManager raceHUDManager;
 
     [Header("Movement Settings")]
 
