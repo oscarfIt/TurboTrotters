@@ -153,7 +153,7 @@ public class pigController : MonoBehaviour
         if (jumped && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound); }
+            if (jumpSound != null) { audioSource.PlayOneShot(jumpSound, 0.5f); }
             jumped = false;
             Debug.Log("Jumped!");
         }
