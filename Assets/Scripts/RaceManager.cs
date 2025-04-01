@@ -12,7 +12,10 @@ public class RaceManager : MonoBehaviour
     public GameObject playerPrefab;
     public Transform[] spawnPoints;
 
-
+    public Material redMaterial;
+    public Material blueMaterial;
+    public Material greenMaterial;
+    public Material yellowMaterial;
     void Start()
     {
        players = new List<GameObject>();
@@ -31,7 +34,21 @@ public class RaceManager : MonoBehaviour
         );
 
             player.transform.position = spawnPoint.position;
+
+            Renderer rend = player.gameObject.GetComponentInChildren<Renderer>();
+            if (rend != null)
+            {
+                Material chosenMat = GetMaterialForColor(data.color);
+                if (chosenMat != null)
+                {
+                    rend.material = chosenMat;
+                }
+            }
+
+
             players.Add( player.gameObject);
+
+           
         }
     }
 
@@ -59,6 +76,14 @@ public class RaceManager : MonoBehaviour
         }
     }
 
+    private Material GetMaterialForColor(Color color)
+    {
+        if (color == Color.red) return redMaterial;
+        if (color == Color.blue) return blueMaterial;
+        if (color == Color.green) return greenMaterial;
+        if (color == Color.yellow) return yellowMaterial;
+        return null; // fallback
+    }
 
     public System.Collections.IEnumerator KickPig(GameObject pigToKick)
     {

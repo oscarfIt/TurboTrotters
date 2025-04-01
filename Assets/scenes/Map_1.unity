@@ -5974,6 +5974,10 @@ MonoBehaviour:
   - {fileID: 1263676914}
   - {fileID: 2081959545}
   - {fileID: 824275991}
+  redMaterial: {fileID: 2100000, guid: 856eed8254c6a164397e638ef34777db, type: 2}
+  blueMaterial: {fileID: 2100000, guid: 8ab2ab24fb56c5b4e913d5ec059b175d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 75608f14327a71949a246186cad8fdef, type: 2}
+  yellowMaterial: {fileID: 2100000, guid: 00a4bdb758beb234b9543d932271526a, type: 2}
 --- !u!4 &838470370 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400010, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
