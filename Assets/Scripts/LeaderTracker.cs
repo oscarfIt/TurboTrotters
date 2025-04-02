@@ -26,20 +26,7 @@ public class LeaderTracker : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"Player {other.gameObject.name} entered trigger");
             SetNewLeader(other.gameObject);
-        }
-        else if (other.gameObject.CompareTag(TrackSection.SouthStraight) ||
-                 other.gameObject.CompareTag(TrackSection.EastStraight) ||
-                 other.gameObject.CompareTag(TrackSection.NorthStraight) ||
-                 other.gameObject.CompareTag(TrackSection.WestStraight) ||
-                 other.gameObject.CompareTag(TrackSection.SecantNorthEast) ||
-                 other.gameObject.CompareTag(TrackSection.SecantNorthWest) ||
-                 other.gameObject.CompareTag(TrackSection.SecantSouthEast) ||
-                 other.gameObject.CompareTag(TrackSection.SecantSouthWest))
-        {
-            Debug.Log($"Plane {gameObject.name} entered track section: {other.gameObject.tag}");
-            raceManager.SetCurrentTrackSection(other.gameObject.tag);
         }
     }
 
