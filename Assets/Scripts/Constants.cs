@@ -24,7 +24,7 @@ public struct PigMass
     public const int MIN = 5;
     public const int MAX = 20;
     public const float SLOP_INCREASE = 2;
-    public const float DISTANCE_DECREASE = 0.1f;
+    public const float DISTANCE_DECREASE = 0.05f;
     public const float COLLISION_FORCE = 50f;
 }
 
@@ -34,7 +34,7 @@ public struct PigScale
     public const float MIN = 1f;
     public const float MAX = 4f;
     public const float SLOP_INCREASE = 0.8f;
-    public const float DISTANCE_DECREASE = 0.04f;
+    public const float DISTANCE_DECREASE = 0.02f;
 }
 
 public struct TerrainFriction
