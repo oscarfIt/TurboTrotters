@@ -233,6 +233,7 @@ public class pigController : MonoBehaviour
         {
             transform.localScale = newScale;        
         }
+        Debug.Log($"Cardio effect! New mass: {rb.mass}, new scale: {transform.localScale}");
     }
 
     private void OnTriggerEnter(Collider other)

@@ -73,8 +73,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-/[Aa]ssets/TextMesh Pro/*
-/[Aa]ssets/StoneUI/*
+# /[Aa]ssets/TextMesh Pro/*
+# /[Aa]ssets/StoneUI/*
 /[Aa]ssets/PBS Barrels and Crates/*
 
 # Misc
