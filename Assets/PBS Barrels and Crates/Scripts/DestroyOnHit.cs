@@ -17,31 +17,34 @@ public class DestroyOnHit : MonoBehaviour
 	// Update is called once per frame
 	void OnCollisionEnter(Collision col)
 	{
-		if (!col.rigidbody || col.rigidbody.mass < GetComponent<Rigidbody>().mass)
-			return;
+		if (col.gameObject.CompareTag("Player"))
+		{
+			if (!col.rigidbody || col.rigidbody.mass * 10 < GetComponent<Rigidbody>().mass)
+				return;
 
-		// instantiate the exploding barrel
-		GameObject go = (GameObject)Instantiate(
-			explodedPrefab,
-			gameObject.transform.position,
-			gameObject.transform.rotation
-		);
+			// instantiate the exploding barrel
+			GameObject go = (GameObject)Instantiate(
+				explodedPrefab,
+				gameObject.transform.position,
+				gameObject.transform.rotation
+			);
 
-		// get the explosion component on the new object
-		ExplodeBarrel explodeComp = go.GetComponent<ExplodeBarrel>();
+			// get the explosion component on the new object
+			ExplodeBarrel explodeComp = go.GetComponent<ExplodeBarrel>();
 
-		// set desired properties
-		explodeComp.explosionForce = explosionForce;
-		explodeComp.explosionRadius = explosionRadius;
-		explodeComp.upForceMin = upForceMin;
-		explodeComp.upForceMax = upForceMax;
-		explodeComp.autoDestroy = autoDestroy;
-		explodeComp.lifeTime = lifeTime;
+			// set desired properties
+			explodeComp.explosionForce = explosionForce;
+			explodeComp.explosionRadius = explosionRadius;
+			explodeComp.upForceMin = upForceMin;
+			explodeComp.upForceMax = upForceMax;
+			explodeComp.autoDestroy = autoDestroy;
+			explodeComp.lifeTime = lifeTime;
 
-		// make the barrel explode
-		explodeComp.Explode();
+			// make the barrel explode
+			explodeComp.Explode();
 
-		// destroy the nice barrel
-		Destroy(gameObject);
+			// destroy the nice barrel
+			Destroy(gameObject);
+		}
 	}
 }
