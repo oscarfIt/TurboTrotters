@@ -76,6 +76,7 @@ public class RaceManager : MonoBehaviour
         {
             currentLeader = leader;
             FindObjectOfType<RaceHUDManager>().UpdateLeader(players.IndexOf(leader));
+            Debug.Log($"New leader: {leader.name}");
         }
         else
         {
@@ -123,23 +124,27 @@ public class RaceManager : MonoBehaviour
     public void SetCurrentTrackSection(string newSection)
     {
         currentTrackSection = newSection;
+        Debug.Log($"Current track section: {currentTrackSection}");
     }
 
     public void NextLap(string pigName)
     {
         if (pigName != currentLeader.name)
         {
-            Debug.LogWarning("Pig " + pigName + " is not the current leader, cannot advance lap.");
+            Debug.Log("Pig " + pigName + " is not the current leader, cannot advance lap.");
             return;
         }
+        Debug.Log("Pig " + pigName + " has completed a lap.");
         Spawner spawnerScript;
         currentLap++;
         if (currentLap >= numLaps)
         {
-            // End the thing
+            Debug.Log("Race finished, showing results.");
+            FindObjectOfType<RaceResultsManager>().ShowResults(players.IndexOf(currentLeader));
         }
         else if (currentLap > 0)
         {
+            Debug.Log("New lap, cleaning up spawners.");
             // Note > 0 so we don't spawn objects on the first lap, done in Spawner.Start()
             foreach (GameObject spawner in spawners)
             {

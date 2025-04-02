@@ -13,7 +13,7 @@ public class RaceResultsManager : MonoBehaviour
         resultsPanel.SetActive(true);
         Time.timeScale = 0f;
 
-        resultsText.text = $"<b><color=gold>Player {winningPlayerIndex + 1} Wins!</color></b>";
+        resultsText.text = $"<b><color=#FFD700>Player {winningPlayerIndex + 1} Wins!</color></b>";
         EventSystem.current.SetSelectedGameObject(returnButton);
     }
 
