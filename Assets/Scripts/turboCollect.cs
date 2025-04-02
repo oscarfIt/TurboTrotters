@@ -1,14 +1,14 @@
 using UnityEngine;
-
+ 
 public class turboCollect : MonoBehaviour
 {
     public float rotationSpeed = 55f;
-
     private AudioSource audioSource;
     private MeshCollider turboCollider;
+
     void Start()
     {
-        
+        turboCollider = GetComponent<MeshCollider>();
     }
 
     // Update is called once per frame
@@ -16,7 +16,7 @@ public class turboCollect : MonoBehaviour
     {
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
     }
-
+ 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -27,4 +27,10 @@ public class turboCollect : MonoBehaviour
             Destroy(gameObject, audioSource.clip.length);
         }
     }
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 }
+ 
