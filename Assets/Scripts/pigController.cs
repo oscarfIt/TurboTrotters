@@ -70,6 +70,7 @@ public class pigController : MonoBehaviour
         previousPosition = transform.position;
         currentSpeed = baseSpeed;
         rb.mass = PigMass.MIN;
+        EatSlop(1); // Can't run on an empty stomach
         turboPoints = new TurboPoints();
         audioSource = GetComponent<AudioSource>();
 
