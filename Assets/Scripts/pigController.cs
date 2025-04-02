@@ -364,11 +364,12 @@ public class pigController : MonoBehaviour
     private System.Collections.IEnumerator SmoothJump()
     {
         float elapsedTime = 0f;
+        float forceMultiplier = 100f;
 
         while (elapsedTime < Movement.JUMP_DURATION)
         {
             float force = Mathf.Lerp(jumpForce, 0, elapsedTime / Movement.JUMP_DURATION);
-            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Acceleration);
+            rb.AddForce(Vector3.up * force * forceMultiplier * Time.fixedDeltaTime, ForceMode.Acceleration);
             elapsedTime += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
@@ -379,11 +380,12 @@ public class pigController : MonoBehaviour
     private System.Collections.IEnumerator SmoothCollisionForce(Vector3 pushDirection, float massDiff)
     {
         float elapsedTime = 0f;
+        float forceMultiplier = 300f;
 
         while (elapsedTime < Movement.COLLISION_PUSH_DURATION)
         {
             float force = Mathf.Lerp(massDiff * PigMass.COLLISION_FORCE, 0, elapsedTime / Movement.COLLISION_PUSH_DURATION);
-            rb.AddForce(pushDirection * force * Time.fixedDeltaTime, ForceMode.Acceleration);
+            rb.AddForce(pushDirection * force * forceMultiplier * Time.fixedDeltaTime, ForceMode.Acceleration);
             elapsedTime += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
