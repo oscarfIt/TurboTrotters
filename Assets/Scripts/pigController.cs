@@ -30,6 +30,7 @@ public class pigController : MonoBehaviour
     private bool boosted = false;   // This is triggered by input
     private bool boosting = false;   // This is for knowing to reset the speed
     private bool beingKicked = false;   // This should probably disable some stuff
+    private bool allowLapComplete = false; // For those unsporstmanlike pigs
 
     [Header("Friction Settings")]
 
@@ -180,7 +181,6 @@ public class pigController : MonoBehaviour
             boosting = true;
             boosted = false;
             turboEndTime = Time.timeAsDouble + TurboBoost.DURATION;
-            Debug.Log("Turbo activated!");
             animator.SetTrigger("Turbo");
 
             //Update HUD
@@ -193,7 +193,6 @@ public class pigController : MonoBehaviour
             {
                 boosting = false;
                 multiplier = (1/TurboBoost.SPEED_MULTIPLIER);
-                Debug.Log("Turbo ended!");
             }
             else // Boost is active
             {
@@ -260,10 +259,18 @@ public class pigController : MonoBehaviour
             Debug.Log($"{gameObject.name} entered track section: {other.gameObject.tag}");
             raceManager.SetCurrentTrackSection(other.gameObject.tag);
         }
+        else if (other.CompareTag("AllowLapComplete"))
+        {
+            allowLapComplete = !allowLapComplete;
+        }
         else if (other.CompareTag("FinishLine"))
         {
-            raceManager.NextLap(gameObject.name);
-            Debug.Log($"{gameObject.name} CROSSED THE FINISH LINE!");
+            if (allowLapComplete)
+            {
+                raceManager.NextLap(gameObject.name);
+                Debug.Log($"{gameObject.name} CROSSED THE FINISH LINE!");
+                allowLapComplete = false;
+            }
         }
     }
 
@@ -276,7 +283,6 @@ public class pigController : MonoBehaviour
             if (otherPigRb.mass > rb.mass)
             {
                 float massDiff = otherPigRb.mass - rb.mass;
-                Debug.Log($"Mass difference: {massDiff}");
                 // Get pushed away from the other pig
                 Vector3 pushDirection = (transform.position - collision.transform.position).normalized;
                 StartCoroutine(SmoothCollisionForce(pushDirection, massDiff));
@@ -346,6 +352,7 @@ public class pigController : MonoBehaviour
             rb.mass += factor * PigMass.SLOP_INCREASE;
             transform.localScale += new Vector3(factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE, factor * PigScale.SLOP_INCREASE);
         }
+        Debug.Log($"Eating slop! New mass: {rb.mass}, new scale: {transform.localScale}");
     }
 
     // For checking if a pig falls too far behind
@@ -353,7 +360,6 @@ public class pigController : MonoBehaviour
     private bool IsInView()
     {
         Vector3 viewportPosition = mainCamera.WorldToViewportPoint(transform.position);
-        Debug.Log($"Viewport Position: {viewportPosition}");
         return viewportPosition.x > 0f && viewportPosition.y > 0f && viewportPosition.x < 1f && viewportPosition.y < 1f;
     }
 
